@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "WebFetch(domain:stefanstefancik.com)",
+      "WebFetch(domain:jackiehu.design)",
+      "Bash(curl -s https://stefanstefancik.com/ | head -100 && echo \"---JACKIE---\" && curl -s https://jackiehu.design/ | head -150)",
+      "WebFetch(domain:www.housebeautiful.com)"
+    ]
+  }
+}
