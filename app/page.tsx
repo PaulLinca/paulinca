@@ -162,6 +162,151 @@ const projects: Project[] = [
     },
 ];
 
+// ─── Click burst ───────────────────────────────────────────────────────────────
+
+function ClickBurst() {
+    const [bursts, setBursts] = useState<{id: number; x: number; y: number}[]>([]);
+    const idRef = useRef(0);
+
+    useEffect(() => {
+        const onClick = (e: MouseEvent) => {
+            const id = idRef.current++;
+            setBursts(prev => [...prev, {id, x: e.clientX, y: e.clientY}]);
+            setTimeout(() => setBursts(prev => prev.filter(b => b.id !== id)), 700);
+        };
+        window.addEventListener("click", onClick);
+        return () => window.removeEventListener("click", onClick);
+    }, []);
+
+    return (
+        <>
+            {bursts.flatMap(burst =>
+                Array.from({length: 8}, (_, i) => {
+                    const angle = (i / 8) * Math.PI * 2;
+                    return (
+                        <motion.div
+                            key={`${burst.id}-${i}`}
+                            style={{
+                                position: "fixed",
+                                left: burst.x,
+                                top: burst.y,
+                                width: 12,
+                                height: 1.5,
+                                background: "#1a1a1a",
+                                pointerEvents: "none",
+                                zIndex: 9999,
+                                rotate: `${angle * (180 / Math.PI)}deg`,
+                            }}
+                            initial={{x: 0, y: 0, opacity: 0.55, scaleX: 0.3}}
+                            animate={{
+                                x: Math.cos(angle) * 30,
+                                y: Math.sin(angle) * 30,
+                                opacity: 0,
+                                scaleX: 1,
+                            }}
+                            transition={{duration: 0.55, ease: "easeOut"}}
+                        />
+                    );
+                })
+            )}
+        </>
+    );
+}
+
+// ─── Cursor trail ──────────────────────────────────────────────────────────────
+
+const CHAIN_LEN = 12;
+
+function CursorTrail() {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const mouse = useRef({x: -300, y: -300});
+    const chain = useRef(Array.from({length: CHAIN_LEN}, () => ({x: -300, y: -300})));
+    const rafRef = useRef<number>(0);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d")!;
+
+        const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        resize();
+        window.addEventListener("resize", resize);
+
+        const onMove = (e: MouseEvent) => {
+            mouse.current = {x: e.clientX, y: e.clientY};
+        };
+        window.addEventListener("mousemove", onMove);
+
+        const tick = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Spring chain: each node chases the previous
+            const pts = chain.current;
+            const ease = 0.45;
+            pts[0].x += (mouse.current.x - pts[0].x) * ease;
+            pts[0].y += (mouse.current.y - pts[0].y) * ease;
+            for (let i = 1; i < CHAIN_LEN; i++) {
+                pts[i].x += (pts[i - 1].x - pts[i].x) * ease;
+                pts[i].y += (pts[i - 1].y - pts[i].y) * ease;
+            }
+
+            // Smooth quadratic bezier through the chain
+            ctx.save();
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.beginPath();
+            ctx.moveTo(pts[0].x, pts[0].y);
+            for (let i = 1; i < CHAIN_LEN - 1; i++) {
+                const mx = (pts[i].x + pts[i + 1].x) / 2;
+                const my = (pts[i].y + pts[i + 1].y) / 2;
+                ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+            }
+
+            // Gradient: opaque at head, transparent at tail
+            try {
+                const grad = ctx.createLinearGradient(
+                    pts[0].x, pts[0].y,
+                    pts[CHAIN_LEN - 1].x, pts[CHAIN_LEN - 1].y,
+                );
+                grad.addColorStop(0, "rgba(26,26,26,0.45)");
+                grad.addColorStop(1, "rgba(26,26,26,0)");
+                ctx.strokeStyle = grad;
+            } catch {
+                ctx.strokeStyle = "rgba(26,26,26,0.3)";
+            }
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+
+            rafRef.current = requestAnimationFrame(tick);
+        };
+
+        rafRef.current = requestAnimationFrame(tick);
+
+        return () => {
+            window.removeEventListener("mousemove", onMove);
+            window.removeEventListener("resize", resize);
+            cancelAnimationFrame(rafRef.current);
+        };
+    }, []);
+
+    return (
+        <canvas
+            ref={canvasRef}
+            style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                pointerEvents: "none",
+                zIndex: 9998,
+            }}
+        />
+    );
+}
+
 // ─── Custom cursor ─────────────────────────────────────────────────────────────
 
 function Cursor() {
@@ -437,6 +582,8 @@ export default function Home() {
                 background: "#efefe0",
             }}
         >
+            <ClickBurst/>
+            <CursorTrail/>
             <Cursor/>
             <CursorTooltip project={hoveredProject}/>
             <Identity/>
