@@ -105,6 +105,20 @@ const projects: Project[] = [
         freq: 440.0, // A4
     },
     {
+        id: "me-3",
+        name: "me",
+        year: "2026",
+        desc: "vitamin C",
+        href: "#",
+        imageSrc: "/images/photo3.png",
+        w: 135,
+        h: 300,
+        dx: "32vw",
+        dy: "-5vh",
+        rotate: 1,
+        freq: 523.25, // C5
+    },
+    {
         id: "me-2",
         name: "me",
         year: "2023",
