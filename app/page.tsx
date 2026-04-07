@@ -52,7 +52,7 @@ const projects: Project[] = [
         id: "vybes",
         name: "vybes",
         year: "2025",
-        desc: "share your feelings through music",
+        desc: "share your music",
         href: "https://play.google.com/store/apps/details?id=com.linca.vybes",
         imageSrc: "/images/headphones.png",
         w: 100,
@@ -113,7 +113,7 @@ const projects: Project[] = [
         imageSrc: "/images/photo2.jpg",
         w: 300,
         h: 135,
-        dx: "20vw",
+        dx: "25vw",
         dy: "-20vh",
         rotate: 1,
         freq: 392.0, // G4
@@ -127,7 +127,7 @@ const projects: Project[] = [
         imageSrc: "/images/photo.jpg",
         w: 300,
         h: 135,
-        dx: "30vw",
+        dx: "35vw",
         dy: "-30vh",
         rotate: 1,
         freq: 587.33, // D5
@@ -150,7 +150,7 @@ const projects: Project[] = [
         id: "courtscore",
         name: "Court Score",
         year: "2026",
-        desc: "keep track of your score",
+        desc: "track your score",
         href: "https://play.google.com/store/apps/details?id=com.linca.courtscorewear",
         imageSrc: "/images/padel.webp",
         w: 50,
@@ -381,11 +381,11 @@ function CursorTrail() {
                     pts[0].x, pts[0].y,
                     pts[CHAIN_LEN - 1].x, pts[CHAIN_LEN - 1].y,
                 );
-                grad.addColorStop(0, "rgba(26,26,26,0.45)");
-                grad.addColorStop(1, "rgba(26,26,26,0)");
+                grad.addColorStop(0, "rgba(255,120,0,0.6)");
+                grad.addColorStop(1, "rgba(255,120,0,0)");
                 ctx.strokeStyle = grad;
             } catch {
-                ctx.strokeStyle = "rgba(26,26,26,0.3)";
+                ctx.strokeStyle = "rgba(255,120,0,0.4)";
             }
             ctx.lineWidth = 2;
             ctx.stroke();
@@ -692,6 +692,25 @@ export default function Home() {
                 background: "#ffffff",
             }}
         >
+            {/* Sunset lamp */}
+            <div style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -60%)",
+                width: "55vmin",
+                height: "55vmin",
+                borderRadius: "50%",
+                background: `radial-gradient(circle,
+                    rgba(210,50,20,0.55) 0%,
+                    rgba(240,90,10,0.45) 25%,
+                    rgba(255,150,0,0.35) 50%,
+                    rgba(255,210,0,0.2) 70%,
+                    transparent 85%
+                )`,
+                pointerEvents: "none",
+                zIndex: 0,
+            }}/>
             <BackgroundScribble/>
             <ClickBurst/>
             <CursorTrail/>
