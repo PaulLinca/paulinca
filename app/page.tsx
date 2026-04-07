@@ -209,6 +209,7 @@ function BackgroundScribble() {
         let i = 1;
         const POINTS_PER_FRAME = 1;
 
+        let rafId: number;
         const draw = () => {
             const end = Math.min(i + POINTS_PER_FRAME, pts.length - 1);
             for (; i < end; i++) {
@@ -220,10 +221,11 @@ function BackgroundScribble() {
                 ctx.quadraticCurveTo(curr.x, curr.y, (curr.x + next.x) / 2, (curr.y + next.y) / 2);
                 ctx.stroke();
             }
-            if (i < pts.length - 1) requestAnimationFrame(draw);
+            if (i < pts.length - 1) rafId = requestAnimationFrame(draw);
         };
 
-        requestAnimationFrame(draw);
+        rafId = requestAnimationFrame(draw);
+        return () => cancelAnimationFrame(rafId);
     }, []);
 
     return (
@@ -677,6 +679,7 @@ function Identity() {
 
 export default function Home() {
     const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
+    const [scribbleKey, setScribbleKey] = useState(0);
 
     useEffect(() => {
         window.addEventListener("pointermove", () => getCtx(), {once: true});
@@ -711,7 +714,58 @@ export default function Home() {
                 pointerEvents: "none",
                 zIndex: 0,
             }}/>
-            <BackgroundScribble/>
+            <BackgroundScribble key={scribbleKey}/>
+            {/* Reload scribble button */}
+            <div style={{position: "fixed", top: 20, right: 20, zIndex: 10001, display: "flex", alignItems: "center", gap: 8}}
+                onMouseEnter={e => {
+                    (e.currentTarget.querySelector("button") as HTMLElement).style.opacity = "0.8";
+                    (e.currentTarget.querySelector("span") as HTMLElement).style.opacity = "1";
+                }}
+                onMouseLeave={e => {
+                    (e.currentTarget.querySelector("button") as HTMLElement).style.opacity = "0.35";
+                    (e.currentTarget.querySelector("span") as HTMLElement).style.opacity = "0";
+                }}
+            >
+                <span style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "9px",
+                    fontWeight: 300,
+                    letterSpacing: "0.14em",
+                    color: "#1a1a1a",
+                    opacity: 0,
+                    transition: "opacity 0.2s ease",
+                    pointerEvents: "none",
+                    whiteSpace: "nowrap",
+                }}>
+                    redraw scribble
+                </span>
+                <button
+                    onClick={() => setScribbleKey(k => k + 1)}
+                    style={{
+                        width: 32,
+                        height: 32,
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        cursor: "none",
+                        opacity: 0.35,
+                        transition: "opacity 0.2s ease",
+                        flexShrink: 0,
+                    }}
+                >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src="/images/reload.png"
+                        alt="Reload scribble"
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "contain",
+                            filter: "invert(45%) sepia(80%) saturate(600%) hue-rotate(340deg) brightness(1.1)",
+                        }}
+                    />
+                </button>
+            </div>
             <ClickBurst/>
             <CursorTrail/>
             <Cursor/>
