@@ -630,7 +630,19 @@ function Identity() {
             onHoverStart={() => setHovered(true)}
             onHoverEnd={() => setHovered(false)}
         >
-            <h1
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+                src="/images/paullinca.png"
+                alt="PAUL LINCA"
+                style={{
+                    height: "clamp(28px, 3.2vw, 52px)",
+                    width: "auto",
+                    display: "block",
+                    margin: "0 auto 18px",
+                }}
+            />
+
+            {/* <h1
                 style={{
                     fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
                     fontWeight: 500,
@@ -642,7 +654,7 @@ function Identity() {
                 }}
             >
                 PAUL LINCA
-            </h1>
+            </h1> */}
 
             {/* Tagline / email */}
             <AnimatePresence mode="wait">
@@ -696,7 +708,7 @@ export default function Home() {
     const [scribbleKey, setScribbleKey] = useState(0);
 
     useEffect(() => {
-        window.addEventListener("pointermove", () => getCtx(), {once: true});
+        window.addEventListener("pointerdown", () => getCtx(), {once: true});
     }, []);
 
     return (
