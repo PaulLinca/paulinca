@@ -53,20 +53,20 @@ const projects: Project[] = [
         name: "vybes",
         year: "2025",
         desc: "share your feelings through music",
-        href: "#",
+        href: "https://play.google.com/store/apps/details?id=com.linca.vybes",
         imageSrc: "/images/headphones.png",
-        w: 150,
-        h: 150,
-        dx: "-30vw",
+        w: 100,
+        h: 100,
+        dx: "-47vw",
         dy: "-0vh",
         rotate: -2,
-        freq: 523.25,
+        freq: 523.25, // C5
     },
     {
         id: "kayla",
         name: "Kayla",
         year: "2019",
-        desc: "this is my dog",
+        desc: "this is Kayla",
         href: "#",
         imageSrc: "/images/kayla.png",
         w: 200,
@@ -74,21 +74,21 @@ const projects: Project[] = [
         dx: "40vw",
         dy: "35vh",
         rotate: -2,
-        freq: 524.25,
+        freq: 329.63, // E4
     },
     {
         id: "tapsleep",
         name: "TapSleep",
         year: "2026",
         desc: "sleep tight",
-        href: "#",
+        href: "https://play.google.com/store/apps/details?id=com.linca.tapsleep.android",
         imageSrc: "/images/moon.png",
         w: 250,
         h: 250,
         dx: "-45vw",
         dy: "-40vh",
         rotate: -1,
-        freq: 392.0,
+        freq: 261.63, // C4
     },
     {
         id: "rubberduck",
@@ -102,7 +102,7 @@ const projects: Project[] = [
         dx: "-10vw",
         dy: "40vh",
         rotate: 1,
-        freq: 440.0,
+        freq: 440.0, // A4
     },
     {
         id: "me-2",
@@ -116,7 +116,7 @@ const projects: Project[] = [
         dx: "20vw",
         dy: "-20vh",
         rotate: 1,
-        freq: 440.0,
+        freq: 392.0, // G4
     },
     {
         id: "me-1",
@@ -130,37 +130,115 @@ const projects: Project[] = [
         dx: "30vw",
         dy: "-30vh",
         rotate: 1,
-        freq: 440.0,
+        freq: 587.33, // D5
     },
     {
         id: "plants",
         name: "plant",
         year: "2025",
         desc: "take care of your plants",
-        href: "#",
+        href: "https://chromewebstore.google.com/detail/plant-focus-buddy/jaeepnifniockiaomhgnbldfeoilmigc?authuser=0&hl=en-GB",
         imageSrc: "/images/monstera.png",
         w: 250,
         h: 250,
         dx: "-42vw",
         dy: "30vh",
         rotate: 1,
-        freq: 440.0,
+        freq: 349.23, // F4
     },
     {
         id: "courtscore",
         name: "Court Score",
         year: "2026",
         desc: "keep track of your score",
-        href: "#",
+        href: "https://play.google.com/store/apps/details?id=com.linca.courtscorewear",
         imageSrc: "/images/padel.webp",
         w: 50,
         h: 110,
         dx: "-30vw",
         dy: "44vh",
         rotate: 1.5,
-        freq: 659.25,
+        freq: 659.25, // E5
     },
 ];
+
+// ─── Background scribble ───────────────────────────────────────────────────────
+
+function BackgroundScribble() {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext("2d")!;
+
+        const W = canvas.width;
+        const H = canvas.height;
+        const r = Math.random;
+
+        // Generate all points upfront
+        let x = W * (0.25 + r() * 0.5);
+        let y = H * (0.25 + r() * 0.5);
+        let angle = r() * Math.PI * 2;
+        let speed = 18 + r() * 25;
+        const pts: {x: number; y: number}[] = [{x, y}];
+        const steps = 120 + Math.floor(r() * 80);
+
+        for (let i = 0; i < steps; i++) {
+            if (r() < 0.05) {
+                angle += (r() - 0.5) * Math.PI * 2;
+            } else {
+                angle += (r() - 0.5) * 0.5;
+            }
+            speed = Math.max(10, Math.min(45, speed + (r() - 0.5) * 12));
+            x += Math.cos(angle) * speed;
+            y += Math.sin(angle) * speed;
+            x = Math.max(W * 0.05, Math.min(W * 0.95, x));
+            y = Math.max(H * 0.05, Math.min(H * 0.95, y));
+            pts.push({x, y});
+        }
+
+        // Animate drawing point by point
+        ctx.strokeStyle = "rgba(0,255,255,0.55)";
+        ctx.lineWidth = 1.8;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        let i = 1;
+        const POINTS_PER_FRAME = 1;
+
+        const draw = () => {
+            const end = Math.min(i + POINTS_PER_FRAME, pts.length - 1);
+            for (; i < end; i++) {
+                const prev = pts[i - 1];
+                const curr = pts[i];
+                const next = pts[i + 1] ?? curr;
+                ctx.beginPath();
+                ctx.moveTo(prev.x, prev.y);
+                ctx.quadraticCurveTo(curr.x, curr.y, (curr.x + next.x) / 2, (curr.y + next.y) / 2);
+                ctx.stroke();
+            }
+            if (i < pts.length - 1) requestAnimationFrame(draw);
+        };
+
+        requestAnimationFrame(draw);
+    }, []);
+
+    return (
+        <canvas
+            ref={canvasRef}
+            style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                pointerEvents: "none",
+                zIndex: 0,
+            }}
+        />
+    );
+}
 
 // ─── Click burst ───────────────────────────────────────────────────────────────
 
@@ -169,13 +247,29 @@ function ClickBurst() {
     const idRef = useRef(0);
 
     useEffect(() => {
-        const onClick = (e: MouseEvent) => {
-            const id = idRef.current++;
-            setBursts(prev => [...prev, {id, x: e.clientX, y: e.clientY}]);
-            setTimeout(() => setBursts(prev => prev.filter(b => b.id !== id)), 700);
+        let downAt = 0;
+        let curPos = {x: 0, y: 0};
+
+        const onDown = () => { downAt = Date.now(); };
+        const onMove = (e: MouseEvent) => { curPos = {x: e.clientX, y: e.clientY}; };
+        const onUp = () => {
+            if (downAt && Date.now() - downAt >= 400) {
+                const id = idRef.current++;
+                const {x, y} = curPos;
+                setBursts(prev => [...prev, {id, x, y}]);
+                setTimeout(() => setBursts(prev => prev.filter(b => b.id !== id)), 700);
+            }
+            downAt = 0;
         };
-        window.addEventListener("click", onClick);
-        return () => window.removeEventListener("click", onClick);
+
+        window.addEventListener("mousedown", onDown);
+        window.addEventListener("mousemove", onMove);
+        window.addEventListener("mouseup", onUp);
+        return () => {
+            window.removeEventListener("mousedown", onDown);
+            window.removeEventListener("mousemove", onMove);
+            window.removeEventListener("mouseup", onUp);
+        };
     }, []);
 
     return (
@@ -222,6 +316,7 @@ function CursorTrail() {
     const mouse = useRef({x: -300, y: -300});
     const chain = useRef(Array.from({length: CHAIN_LEN}, () => ({x: -300, y: -300})));
     const rafRef = useRef<number>(0);
+    const held = useRef(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -235,12 +330,27 @@ function CursorTrail() {
         resize();
         window.addEventListener("resize", resize);
 
-        const onMove = (e: MouseEvent) => {
+        const onMove = (e: MouseEvent) => { mouse.current = {x: e.clientX, y: e.clientY}; };
+        const onDown = (e: MouseEvent) => {
+            // Snap chain to cursor so trail starts from exact click point
+            chain.current.forEach(p => { p.x = e.clientX; p.y = e.clientY; });
             mouse.current = {x: e.clientX, y: e.clientY};
+            held.current = true;
         };
+        const onUp = () => {
+            held.current = false;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
+
         window.addEventListener("mousemove", onMove);
+        window.addEventListener("mousedown", onDown);
+        window.addEventListener("mouseup", onUp);
 
         const tick = () => {
+            if (!held.current) {
+                rafRef.current = requestAnimationFrame(tick);
+                return;
+            }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Spring chain: each node chases the previous
@@ -288,6 +398,8 @@ function CursorTrail() {
 
         return () => {
             window.removeEventListener("mousemove", onMove);
+            window.removeEventListener("mousedown", onDown);
+            window.removeEventListener("mouseup", onUp);
             window.removeEventListener("resize", resize);
             cancelAnimationFrame(rafRef.current);
         };
@@ -312,8 +424,6 @@ function CursorTrail() {
 function Cursor() {
     const mx = useMotionValue(-100);
     const my = useMotionValue(-100);
-    const sx = useSpring(mx, {damping: 28, stiffness: 350, mass: 0.4});
-    const sy = useSpring(my, {damping: 28, stiffness: 350, mass: 0.4});
 
     useEffect(() => {
         const move = (e: MouseEvent) => {
@@ -328,8 +438,8 @@ function Cursor() {
         <motion.div
             style={{
                 position: "fixed",
-                left: sx,
-                top: sy,
+                left: mx,
+                top: my,
                 x: "-50%",
                 y: "-50%",
                 width: 6,
@@ -387,7 +497,7 @@ function CursorTooltip({project}: { project: Project | null }) {
                             fontFamily: "var(--font-sans)",
                             fontSize: "10px",
                             fontWeight: 300,
-                            color: "#555",
+                            color: "#fa742d",
                             letterSpacing: "0.12em",
                         }}>
                             {project.desc}
@@ -579,9 +689,10 @@ export default function Home() {
                 height: "100vh",
                 position: "relative",
                 overflow: "hidden",
-                background: "#efefe0",
+                background: "#ffffff",
             }}
         >
+            <BackgroundScribble/>
             <ClickBurst/>
             <CursorTrail/>
             <Cursor/>
