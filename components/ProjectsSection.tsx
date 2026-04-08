@@ -57,17 +57,12 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
                 flexDirection: "column",
                 alignItems: "center",
             }}>
-                <div style={{
-                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                    fontSize: "11px",
-                    fontWeight: 500,
-                    letterSpacing: "0.18em",
-                    color: "#888",
-                    marginBottom: "28px",
-                    alignSelf: "center",
-                }}>
-                    Personal Projects
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                    src="/images/personal_projects.png"
+                    alt="Personal Projects"
+                    style={{ marginBottom: "28px", alignSelf: "center", height: "auto", width: "160px" }}
+                />
 
                 <div style={{ width: "100%" }}>
                     {appProjects.map(p => (
