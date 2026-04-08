@@ -276,8 +276,7 @@ export function PanelRenderer({ blocks, align }: { blocks: PanelBlock[]; align: 
                 display: "flex",
                 flexDirection: "column",
                 alignItems: align === "left" ? "flex-end" : "flex-start",
-                padding: align === "left" ? "0 4vw 0 0" : "0 0 0 4vw",
-                maxWidth: "360px",
+                maxWidth: "420px",
             }}
         >
             {blocks.map((block, i) => {

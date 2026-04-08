@@ -22,37 +22,45 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
 
     return (
         <section ref={sectionRef} style={{
-            minHeight: "auto",
-            display: "flex",
-            alignItems: "flex-start",
-            padding: "100px 4vw 32px",
+            position: "relative",
+            padding: "100px 0 32px",
             background: "#ffffff",
         }}>
-            {/* Left panel */}
+            {/* Left panel — absolutely fills section height, inner div sticky-centers in viewport */}
             <div style={{
-                flex: 1,
-                position: "sticky",
+                position: "absolute",
+                left: 0,
                 top: 0,
-                height: "auto",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
+                bottom: 0,
+                right: "calc(50% + 210px)",
+                pointerEvents: "none",
             }}>
-                <AnimatePresence mode="wait">
-                    {displayedProject?.leftPanel && (
-                        <PanelRenderer
-                            key={displayedProject.id + "-left"}
-                            blocks={displayedProject.leftPanel}
-                            align="left"
-                        />
-                    )}
-                </AnimatePresence>
+                <div style={{
+                    position: "sticky",
+                    top: 0,
+                    height: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    paddingRight: "4vw",
+                    pointerEvents: "auto",
+                }}>
+                    <AnimatePresence mode="wait">
+                        {displayedProject?.leftPanel && (
+                            <PanelRenderer
+                                key={displayedProject.id + "-left"}
+                                blocks={displayedProject.leftPanel}
+                                align="left"
+                            />
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
 
-            {/* Center — cards */}
+            {/* Center — cards, determines section height */}
             <div style={{
-                flex: "0 0 auto",
                 width: "420px",
+                margin: "0 auto",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -79,25 +87,35 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
                 </div>
             </div>
 
-            {/* Right panel */}
+            {/* Right panel — absolutely fills section height, inner div sticky-centers in viewport */}
             <div style={{
-                flex: 1,
-                position: "sticky",
+                position: "absolute",
+                right: 0,
                 top: 0,
-                height: "auto",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
+                bottom: 0,
+                left: "calc(50% + 210px)",
+                pointerEvents: "none",
             }}>
-                <AnimatePresence mode="wait">
-                    {displayedProject?.rightPanel && (
-                        <PanelRenderer
-                            key={displayedProject.id + "-right"}
-                            blocks={displayedProject.rightPanel}
-                            align="right"
-                        />
-                    )}
-                </AnimatePresence>
+                <div style={{
+                    position: "sticky",
+                    top: 0,
+                    height: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    paddingLeft: "4vw",
+                    pointerEvents: "auto",
+                }}>
+                    <AnimatePresence mode="wait">
+                        {displayedProject?.rightPanel && (
+                            <PanelRenderer
+                                key={displayedProject.id + "-right"}
+                                blocks={displayedProject.rightPanel}
+                                align="right"
+                            />
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
         </section>
     );
