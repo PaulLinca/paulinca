@@ -8,6 +8,7 @@ import { ClickBurst } from "@/components/ClickBurst";
 import { Cursor } from "@/components/Cursor";
 import { CursorTooltip } from "@/components/CursorTooltip";
 import { CursorTrail } from "@/components/CursorTrail";
+import { AboutSection } from "@/components/AboutSection";
 import { HeroSection } from "@/components/HeroSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 
@@ -49,6 +50,8 @@ export default function Home() {
                 lockedProject={lockedProject}
                 setLockedProject={setLockedProject}
             />
+
+            <AboutSection />
         </div>
     );
 }

@@ -38,7 +38,7 @@ export const PANEL_TEXT_STYLES: Record<
         marginBottom: "4px",
     },
     body: {
-        fontSize: "13px",
+        fontSize: "20px",
         fontWeight: 300,
         color: "#444",
         letterSpacing: "0.02em",

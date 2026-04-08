@@ -22,10 +22,10 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
 
     return (
         <section ref={sectionRef} style={{
-            minHeight: "100vh",
+            minHeight: "auto",
             display: "flex",
             alignItems: "flex-start",
-            padding: "100px 4vw 100px",
+            padding: "100px 4vw 32px",
             background: "#ffffff",
         }}>
             {/* Left panel */}
@@ -33,7 +33,7 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
                 flex: 1,
                 position: "sticky",
                 top: 0,
-                height: "100vh",
+                height: "auto",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "flex-end",
@@ -84,7 +84,7 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
                 flex: 1,
                 position: "sticky",
                 top: 0,
-                height: "100vh",
+                height: "auto",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "flex-start",
