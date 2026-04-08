@@ -19,7 +19,8 @@
       "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/vybes* 2>/dev/null)",
       "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/courtscore*)",
       "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/tapsleep*)",
-      "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/plant_*)"
+      "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/plant_*)",
+      "Bash(npx next:*)"
     ]
   }
 }
