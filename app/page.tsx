@@ -1397,7 +1397,7 @@ function ProjectsSection({sectionRef, lockedProject, setLockedProject}: {
             {/* Center — cards */}
             <div style={{
                 flex: "0 0 auto",
-                width: "360px",
+                width: "420px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -1411,7 +1411,7 @@ function ProjectsSection({sectionRef, lockedProject, setLockedProject}: {
                     color: "#888",
                     marginBottom: "28px",
                     textTransform: "uppercase",
-                    alignSelf: "flex-start",
+                    alignSelf: "center",
                 }}>
                     Personal Projects
                 </div>
@@ -1587,20 +1587,18 @@ export default function Home() {
                         bottom: 28,
                         left: "50%",
                         x: "-50%",
-                        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                        fontSize: "8px",
-                        fontWeight: 300,
-                        letterSpacing: "0.24em",
-                        color: "#1a1a1a",
                         zIndex: 5,
                         pointerEvents: "none",
-                        textTransform: "uppercase",
                     }}
-                    initial={{opacity: 0}}
-                    animate={{opacity: 0.28}}
-                    transition={{delay: 3, duration: 1.5, ease: "easeOut"}}
+                    initial={{opacity: 0, y: 0}}
+                    animate={{opacity: 0.35, y: [0, 6, 0]}}
+                    transition={{
+                        opacity: {delay: 3, duration: 1.5, ease: "easeOut"},
+                        y: {delay: 3, duration: 1.8, repeat: Infinity, ease: "easeInOut"},
+                    }}
                 >
-                    scroll
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/images/scroll.png" alt="scroll" style={{width: 28, height: "auto", display: "block"}}/>
                 </motion.div>
             </div>
 
