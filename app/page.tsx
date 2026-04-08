@@ -147,7 +147,7 @@ const projects: Project[] = [
         freq: 587.33,
     },
     {
-        id: "plants",
+        id: "plant",
         name: "plant",
         year: "2025",
         desc: "take care of your plants",
@@ -213,7 +213,7 @@ const LINK_LABELS: Record<LinkType, string> = {
     github: "GitHub",
     playstore: "Play Store",
     appstore: "App Store",
-    chrome: "Chrome",
+    chrome: "Chrome Web Store",
     web: "Web",
 };
 
@@ -230,7 +230,7 @@ const appProjects: AppProject[] = [
         rightPanel: [
             {kind: "text", value: "vybes", variant: "heading"},
             {kind: "text", value: "2025", variant: "label"},
-            {kind: "text", value: "A social music sharing app. See what your friends are listening to, share your current track, and discover music through the people you know.", variant: "body"},
+            {kind: "text", value: "A social music sharing app. Share songs, review albums, participate in polls, and discover music through the people you know.", variant: "body"},
         ],
     },
     {
@@ -246,7 +246,7 @@ const appProjects: AppProject[] = [
         rightPanel: [
             {kind: "text", value: "Court Score", variant: "heading"},
             {kind: "text", value: "2026", variant: "label"},
-            {kind: "text", value: "A Wear OS app for tracking padel and tennis scores right from your wrist. No phone needed on the court.", variant: "body"},
+            {kind: "text", value: "A smartwatch app for tracking padel scores right from your wrist. No phone needed.", variant: "body"},
         ],
     },
     {
@@ -262,7 +262,7 @@ const appProjects: AppProject[] = [
         rightPanel: [
             {kind: "text", value: "TapSleep", variant: "heading"},
             {kind: "text", value: "2026", variant: "label"},
-            {kind: "text", value: "A gentle sleep companion. Calming sounds, a simple tap-to-sleep timer, and nothing else to keep you up.", variant: "body"},
+            {kind: "text", value: "A gentle sleep companion. Pick one or blend up to three to help you sleep.", variant: "body"},
         ],
     },
     {
@@ -277,7 +277,7 @@ const appProjects: AppProject[] = [
         rightPanel: [
             {kind: "text", value: "Plant Focus Buddy", variant: "heading"},
             {kind: "text", value: "2025", variant: "label"},
-            {kind: "text", value: "A Chrome extension that gamifies focus time by letting you grow a digital plant. Stay focused, keep your plant alive.", variant: "body"},
+            {kind: "text", value: "A browser extension that gamifies focus time by letting you grow a digital plant. Stay focused, keep your plant alive.", variant: "body"},
         ],
     },
     {
@@ -290,9 +290,9 @@ const appProjects: AppProject[] = [
             {type: "web", url: "https://explainyourbugtotherubberduck.com/"},
         ],
         rightPanel: [
-            {kind: "text", value: "Explain Your Bug", variant: "heading"},
+            {kind: "text", value: "Talk to a duck", variant: "heading"},
             {kind: "text", value: "2026", variant: "label"},
-            {kind: "text", value: "Rubber duck debugging, productized. Explain your bug out loud and you'll usually figure it out before you're done explaining.", variant: "body"},
+            {kind: "text", value: "Rubber duck debugging. Solve your problems yourself, the duck only listens", variant: "body"},
         ],
     },
 ];
@@ -642,15 +642,16 @@ function CursorTooltip({project}: { project: Project | null }) {
 
 // ─── Project node (scatter) ────────────────────────────────────────────────────
 
-function ProjectNode({p, index, onHoverIn, onHoverOut}: {
+function ProjectNode({p, index, onHoverIn, onHoverOut, onAppClick}: {
     p: Project;
     index: number;
     onHoverIn: () => void;
     onHoverOut: () => void;
+    onAppClick?: () => void;
 }) {
     const [active, setActive] = useState(false);
     const throttle = useRef(false);
-    const isExternal = p.href.startsWith("http");
+    const hasAppProject = appProjects.some(ap => ap.id === p.id);
 
     function onEnter() {
         setActive(true);
@@ -667,6 +668,15 @@ function ProjectNode({p, index, onHoverIn, onHoverOut}: {
     function onLeave() {
         setActive(false);
         onHoverOut();
+    }
+
+    function handleClick(e: React.MouseEvent) {
+        if (hasAppProject && onAppClick) {
+            e.preventDefault();
+            onAppClick();
+        } else if (p.href === "#") {
+            e.preventDefault();
+        }
     }
 
     return (
@@ -692,9 +702,9 @@ function ProjectNode({p, index, onHoverIn, onHoverOut}: {
         >
             <a
                 href={p.href}
-                target={isExternal ? "_blank" : undefined}
+                target={!hasAppProject && p.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                onClick={(e) => p.href === "#" && e.preventDefault()}
+                onClick={handleClick}
                 style={{display: "block"}}
             >
                 <motion.div
@@ -1020,9 +1030,12 @@ function PanelRenderer({blocks, align}: {blocks: PanelBlock[]; align: "left" | "
 
 // ─── Projects section ─────────────────────────────────────────────────────────
 
-function ProjectsSection() {
+function ProjectsSection({sectionRef, lockedProject, setLockedProject}: {
+    sectionRef: React.RefObject<HTMLElement | null>;
+    lockedProject: AppProject | null;
+    setLockedProject: React.Dispatch<React.SetStateAction<AppProject | null>>;
+}) {
     const [hoveredProject, setHoveredProject] = useState<AppProject | null>(null);
-    const [lockedProject, setLockedProject] = useState<AppProject | null>(null);
 
     const displayedProject = lockedProject ?? hoveredProject;
 
@@ -1031,7 +1044,7 @@ function ProjectsSection() {
     }
 
     return (
-        <section style={{
+        <section ref={sectionRef} style={{
             minHeight: "100vh",
             display: "flex",
             alignItems: "flex-start",
@@ -1125,10 +1138,20 @@ function ProjectsSection() {
 export default function Home() {
     const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
     const [scribbleKey, setScribbleKey] = useState(0);
+    const [lockedProject, setLockedProject] = useState<AppProject | null>(null);
+    const projectsSectionRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
         window.addEventListener("pointerdown", () => getCtx(), {once: true});
     }, []);
+
+    function handleScatterProjectClick(scatterProjectId: string) {
+        const appProject = appProjects.find(p => p.id === scatterProjectId);
+        projectsSectionRef.current?.scrollIntoView({behavior: "smooth"});
+        if (appProject) {
+            setLockedProject(prev => prev?.id === appProject.id ? null : appProject);
+        }
+    }
 
     return (
         <div style={{width: "100vw", background: "#ffffff"}}>
@@ -1227,6 +1250,7 @@ export default function Home() {
                         index={i}
                         onHoverIn={() => setHoveredProject(p)}
                         onHoverOut={() => setHoveredProject(null)}
+                        onAppClick={() => handleScatterProjectClick(p.id)}
                     />
                 ))}
 
@@ -1255,7 +1279,11 @@ export default function Home() {
             </div>
 
             {/* ── Projects section ── */}
-            <ProjectsSection/>
+            <ProjectsSection
+                sectionRef={projectsSectionRef}
+                lockedProject={lockedProject}
+                setLockedProject={setLockedProject}
+            />
         </div>
     );
 }
