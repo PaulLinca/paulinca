@@ -30,7 +30,7 @@ function softClick(freq: number) {
     osc.stop(ctx.currentTime + 0.7);
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Scatter data ─────────────────────────────────────────────────────────────
 
 interface Project {
     id: string;
@@ -60,7 +60,7 @@ const projects: Project[] = [
         dx: "-47vw",
         dy: "-0vh",
         rotate: -2,
-        freq: 523.25, // C5
+        freq: 523.25,
     },
     {
         id: "kayla",
@@ -74,7 +74,7 @@ const projects: Project[] = [
         dx: "40vw",
         dy: "35vh",
         rotate: -2,
-        freq: 329.63, // E4
+        freq: 329.63,
     },
     {
         id: "tapsleep",
@@ -88,11 +88,11 @@ const projects: Project[] = [
         dx: "-45vw",
         dy: "-40vh",
         rotate: -1,
-        freq: 261.63, // C4
+        freq: 261.63,
     },
     {
         id: "rubberduck",
-        name: "Explain Your Bug",
+        name: "explainyourbugtotherubberduck.com",
         year: "2026",
         desc: "talk to a duck",
         href: "https://explainyourbugtotherubberduck.com/",
@@ -102,7 +102,7 @@ const projects: Project[] = [
         dx: "-10vw",
         dy: "40vh",
         rotate: 1,
-        freq: 440.0, // A4
+        freq: 440.0,
     },
     {
         id: "me-3",
@@ -116,7 +116,7 @@ const projects: Project[] = [
         dx: "32vw",
         dy: "-5vh",
         rotate: 1,
-        freq: 523.25, // C5
+        freq: 523.25,
     },
     {
         id: "me-2",
@@ -130,7 +130,7 @@ const projects: Project[] = [
         dx: "25vw",
         dy: "-20vh",
         rotate: 1,
-        freq: 392.0, // G4
+        freq: 392.0,
     },
     {
         id: "me-1",
@@ -144,7 +144,7 @@ const projects: Project[] = [
         dx: "35vw",
         dy: "-30vh",
         rotate: 1,
-        freq: 587.33, // D5
+        freq: 587.33,
     },
     {
         id: "plants",
@@ -158,7 +158,7 @@ const projects: Project[] = [
         dx: "-42vw",
         dy: "30vh",
         rotate: 1,
-        freq: 349.23, // F4
+        freq: 349.23,
     },
     {
         id: "courtscore",
@@ -172,7 +172,102 @@ const projects: Project[] = [
         dx: "-30vw",
         dy: "44vh",
         rotate: 1.5,
-        freq: 659.25, // E5
+        freq: 659.25,
+    },
+];
+
+// ─── App projects data ─────────────────────────────────────────────────────────
+
+type LinkType = "github" | "playstore" | "appstore" | "chrome" | "web";
+
+interface ProjectLink {
+    type: LinkType;
+    url: string;
+}
+
+interface AppProject {
+    id: string;
+    name: string;
+    year: string;
+    tagline: string;
+    description: string;
+    icon: string;
+    links: ProjectLink[];
+}
+
+const LINK_ICONS: Record<LinkType, string> = {
+    github: "/images/web_site.png",
+    playstore: "/images/play_store.png",
+    appstore: "/images/app_store.png",
+    chrome: "/images/web_store.png",
+    web: "/images/web_site.png",
+};
+
+const LINK_LABELS: Record<LinkType, string> = {
+    github: "GitHub",
+    playstore: "Play Store",
+    appstore: "App Store",
+    chrome: "Chrome",
+    web: "Web",
+};
+
+const appProjects: AppProject[] = [
+    {
+        id: "vybes",
+        name: "vybes",
+        year: "2025",
+        tagline: "share your music",
+        description: "A social music sharing app. See what your friends are listening to, share your current track, and discover music through the people you know.",
+        icon: "/images/vybes_icon.png",
+        links: [
+            {type: "playstore", url: "https://play.google.com/store/apps/details?id=com.linca.vybes"},
+        ],
+    },
+    {
+        id: "courtscore",
+        name: "Court Score",
+        year: "2026",
+        tagline: "track your score",
+        description: "A Wear OS app for tracking padel and tennis scores right from your wrist. No phone needed on the court.",
+        icon: "/images/courtscore_icon.png",
+        links: [
+            {type: "playstore", url: "https://play.google.com/store/apps/details?id=com.linca.courtscorewear"},
+            {type: "appstore", url: "https://apps.apple.com/us/app/court-score-padel-scoreboard/id6759218272"},
+        ],
+    },
+    {
+        id: "tapsleep",
+        name: "TapSleep",
+        year: "2026",
+        tagline: "sleep tight",
+        description: "A gentle sleep companion. Calming sounds, a simple tap-to-sleep timer, and nothing else to keep you up.",
+        icon: "/images/tapsleep_icon.png",
+        links: [
+            {type: "playstore", url: "https://play.google.com/store/apps/details?id=com.linca.tapsleep.android"},
+            {type: "appstore", url: "https://apps.apple.com/us/app/tapsleep/id6760365138"},
+        ],
+    },
+    {
+        id: "plant",
+        name: "Plant Focus Buddy",
+        year: "2025",
+        tagline: "take care of your plants",
+        description: "A Chrome extension that gamifies focus time by letting you grow a digital plant. Stay focused, keep your plant alive.",
+        icon: "/images/plantfocusbuddy_icon.png",
+        links: [
+            {type: "chrome", url: "https://chromewebstore.google.com/detail/plant-focus-buddy/jaeepnifniockiaomhgnbldfeoilmigc?authuser=0&hl=en-GB"},
+        ],
+    },
+    {
+        id: "rubberduck",
+        name: "explainyourbugtotherubberduck.com",
+        year: "2026",
+        tagline: "talk to a duck",
+        description: "Rubber duck debugging, productized. Explain your bug out loud and you'll usually figure it out before you're done explaining.",
+        icon: "/images/rubberduck_icon.jpg",
+        links: [
+            {type: "web", url: "https://explainyourbugtotherubberduck.com/"},
+        ],
     },
 ];
 
@@ -192,7 +287,6 @@ function BackgroundScribble() {
         const H = canvas.height;
         const r = Math.random;
 
-        // Generate all points upfront
         let x = W * (0.25 + r() * 0.5);
         let y = H * (0.25 + r() * 0.5);
         let angle = r() * Math.PI * 2;
@@ -214,7 +308,6 @@ function BackgroundScribble() {
             pts.push({x, y});
         }
 
-        // Animate drawing point by point
         ctx.strokeStyle = "rgba(0,255,255,0.55)";
         ctx.lineWidth = 1.8;
         ctx.lineCap = "round";
@@ -246,7 +339,7 @@ function BackgroundScribble() {
         <canvas
             ref={canvasRef}
             style={{
-                position: "fixed",
+                position: "absolute",
                 top: 0,
                 left: 0,
                 pointerEvents: "none",
@@ -348,7 +441,6 @@ function CursorTrail() {
 
         const onMove = (e: MouseEvent) => { mouse.current = {x: e.clientX, y: e.clientY}; };
         const onDown = (e: MouseEvent) => {
-            // Snap chain to cursor so trail starts from exact click point
             chain.current.forEach(p => { p.x = e.clientX; p.y = e.clientY; });
             mouse.current = {x: e.clientX, y: e.clientY};
             held.current = true;
@@ -369,7 +461,6 @@ function CursorTrail() {
             }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Spring chain: each node chases the previous
             const pts = chain.current;
             const ease = 0.45;
             pts[0].x += (mouse.current.x - pts[0].x) * ease;
@@ -379,7 +470,6 @@ function CursorTrail() {
                 pts[i].y += (pts[i - 1].y - pts[i].y) * ease;
             }
 
-            // Smooth quadratic bezier through the chain
             ctx.save();
             ctx.lineCap = "round";
             ctx.lineJoin = "round";
@@ -391,7 +481,6 @@ function CursorTrail() {
                 ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
             }
 
-            // Gradient: opaque at head, transparent at tail
             try {
                 const grad = ctx.createLinearGradient(
                     pts[0].x, pts[0].y,
@@ -525,7 +614,7 @@ function CursorTooltip({project}: { project: Project | null }) {
     );
 }
 
-// ─── Project node ──────────────────────────────────────────────────────────────
+// ─── Project node (scatter) ────────────────────────────────────────────────────
 
 function ProjectNode({p, index, onHoverIn, onHoverOut}: {
     p: Project;
@@ -642,21 +731,6 @@ function Identity() {
                 }}
             />
 
-            {/* <h1
-                style={{
-                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                    fontWeight: 500,
-                    fontSize: "clamp(28px, 3.2vw, 52px)",
-                    color: "#1a1a1a",
-                    letterSpacing: "0.01em",
-                    lineHeight: 1,
-                    whiteSpace: "nowrap",
-                }}
-            >
-                PAUL LINCA
-            </h1> */}
-
-            {/* Tagline / email */}
             <AnimatePresence mode="wait">
                 {hovered ? (
                     <motion.a
@@ -701,6 +775,324 @@ function Identity() {
     );
 }
 
+// ─── Project card ─────────────────────────────────────────────────────────────
+
+function ProjectCard({project, isActive, isLocked, onHover, onLeave, onClick}: {
+    project: AppProject;
+    isActive: boolean;
+    isLocked: boolean;
+    onHover: () => void;
+    onLeave: () => void;
+    onClick: () => void;
+}) {
+    return (
+        <motion.div
+            onHoverStart={onHover}
+            onHoverEnd={onLeave}
+            onClick={onClick}
+            animate={{
+                backgroundColor: isActive ? "rgba(26,26,26,0.04)" : "rgba(26,26,26,0)",
+                borderColor: isLocked ? "#fa742d" : isActive ? "rgba(26,26,26,0.18)" : "rgba(26,26,26,0.12)",
+            }}
+            transition={{duration: 0.3, ease: "easeOut"}}
+            style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "16px",
+                padding: "16px",
+                marginBottom: "10px",
+                border: "1px solid rgba(26,26,26,0.12)",
+                borderRadius: "14px",
+                cursor: "none",
+            }}
+        >
+            {/* Icon */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+                src={project.icon}
+                alt={project.name}
+                style={{
+                    width: "52px",
+                    height: "52px",
+                    objectFit: "cover",
+                    flexShrink: 0,
+                    borderRadius: "12px",
+                    filter: isActive
+                        ? "grayscale(0%) brightness(1)"
+                        : "grayscale(20%) brightness(0.95)",
+                    transition: "filter 0.4s ease",
+                }}
+            />
+
+            <div style={{flex: 1, minWidth: 0}}>
+                {/* Name + year */}
+                <div style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: "8px",
+                    marginBottom: "4px",
+                }}>
+                    <span style={{
+                        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                        fontSize: "16px",
+                        fontWeight: 500,
+                        color: "#111",
+                        letterSpacing: "0.01em",
+                    }}>
+                        {project.name}
+                    </span>
+                    <span style={{
+                        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                        fontSize: "10px",
+                        fontWeight: 400,
+                        color: "#fa742d",
+                        letterSpacing: "0.10em",
+                    }}>
+                        {project.year}
+                    </span>
+                </div>
+
+                {/* Tagline */}
+                <div style={{
+                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                    fontSize: "13px",
+                    fontWeight: 400,
+                    color: "#444",
+                    letterSpacing: "0.01em",
+                    marginBottom: "14px",
+                }}>
+                    {project.tagline}
+                </div>
+
+                {/* Links */}
+                <div style={{display: "flex", gap: "8px", flexWrap: "wrap"}}>
+                    {project.links.map(link => (
+                        <a
+                            key={link.type}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={e => e.stopPropagation()}
+                            title={LINK_LABELS[link.type]}
+                            style={{display: "inline-flex", cursor: "none"}}
+                            onMouseEnter={e => {
+                                const img = e.currentTarget.querySelector("img") as HTMLElement;
+                                img.style.filter = "brightness(0) saturate(100%) invert(52%) sepia(90%) saturate(600%) hue-rotate(344deg) brightness(1.05)";
+                            }}
+                            onMouseLeave={e => {
+                                const img = e.currentTarget.querySelector("img") as HTMLElement;
+                                img.style.filter = "none";
+                            }}
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={LINK_ICONS[link.type]}
+                                alt={LINK_LABELS[link.type]}
+                                style={{width: "24px", height: "24px", objectFit: "contain", transition: "filter 0.2s ease"}}
+                            />
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </motion.div>
+    );
+}
+
+// ─── Project detail (right panel) ─────────────────────────────────────────────
+
+function ProjectDetail({project}: {project: AppProject}) {
+    return (
+        <motion.div
+            key={project.id}
+            initial={{opacity: 0, y: 12}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: -12}}
+            transition={{duration: 0.45, ease: [0.16, 1, 0.3, 1]}}
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                padding: "0 0 0 6vw",
+            }}
+        >
+            {/* Large icon */}
+            <motion.img
+                src={project.icon}
+                alt={project.name}
+                style={{
+                    width: "88px",
+                    height: "88px",
+                    objectFit: "contain",
+                    marginBottom: "36px",
+                }}
+                initial={{scale: 0.8, opacity: 0}}
+                animate={{scale: 1, opacity: 1}}
+                transition={{duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.05}}
+            />
+
+            {/* Name */}
+            <div style={{
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                fontSize: "clamp(32px, 4vw, 56px)",
+                fontWeight: 300,
+                color: "#1a1a1a",
+                letterSpacing: "-0.01em",
+                lineHeight: 1,
+                marginBottom: "8px",
+            }}>
+                {project.name}
+            </div>
+
+            {/* Year */}
+            <div style={{
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                fontSize: "9px",
+                fontWeight: 300,
+                color: "#fa742d",
+                letterSpacing: "0.22em",
+                marginBottom: "28px",
+            }}>
+                {project.year}
+            </div>
+
+            {/* Description */}
+            <div style={{
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                fontSize: "13px",
+                fontWeight: 300,
+                color: "#1a1a1a",
+                letterSpacing: "0.02em",
+                lineHeight: 1.75,
+                maxWidth: "360px",
+                opacity: 0.65,
+                marginBottom: "32px",
+            }}>
+                {project.description}
+            </div>
+
+            {/* Links */}
+            <div style={{display: "flex", gap: "8px", flexWrap: "wrap"}}>
+                {project.links.map(link => (
+                    <a
+                        key={link.type}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={LINK_LABELS[link.type]}
+                        style={{display: "inline-flex", cursor: "none"}}
+                        onMouseEnter={e => {
+                            const img = e.currentTarget.querySelector("img") as HTMLElement;
+                            img.style.filter = "brightness(0) saturate(100%) invert(52%) sepia(90%) saturate(600%) hue-rotate(344deg) brightness(1.05)";
+                        }}
+                        onMouseLeave={e => {
+                            const img = e.currentTarget.querySelector("img") as HTMLElement;
+                            img.style.filter = "none";
+                        }}
+                    >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={LINK_ICONS[link.type]}
+                            alt={LINK_LABELS[link.type]}
+                            style={{width: "32px", height: "32px", objectFit: "contain", transition: "filter 0.2s ease"}}
+                        />
+                    </a>
+                ))}
+            </div>
+        </motion.div>
+    );
+}
+
+// ─── Projects section ─────────────────────────────────────────────────────────
+
+function ProjectsSection() {
+    const [hoveredProject, setHoveredProject] = useState<AppProject | null>(null);
+    const [lockedProject, setLockedProject] = useState<AppProject | null>(null);
+
+    const displayedProject = lockedProject ?? hoveredProject;
+
+    function handleClick(p: AppProject) {
+        setLockedProject(prev => prev?.id === p.id ? null : p);
+    }
+
+    return (
+        <section style={{
+            minHeight: "100vh",
+            display: "flex",
+            padding: "100px 8vw 100px",
+            position: "relative",
+            background: "#ffffff",
+        }}>
+            {/* Left column — cards */}
+            <div style={{
+                flex: "0 0 40%",
+                maxWidth: "420px",
+            }}>
+                {/* Section label */}
+                <div style={{
+                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    letterSpacing: "0.12em",
+                    color: "#555",
+                    marginBottom: "24px",
+                    textTransform: "uppercase",
+                }}>
+                    Personal Projects
+                </div>
+
+                <div>
+                    {appProjects.map(p => (
+                        <ProjectCard
+                            key={p.id}
+                            project={p}
+                            isActive={displayedProject?.id === p.id}
+                            isLocked={lockedProject?.id === p.id}
+                            onHover={() => { if (!lockedProject) setHoveredProject(p); }}
+                            onLeave={() => { if (!lockedProject) setHoveredProject(null); }}
+                            onClick={() => handleClick(p)}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* Right column — detail */}
+            <div style={{
+                flex: 1,
+                position: "sticky",
+                top: 0,
+                height: "100vh",
+                alignSelf: "flex-start",
+                display: "flex",
+                alignItems: "center",
+            }}>
+                <AnimatePresence mode="wait">
+                    {displayedProject ? (
+                        <ProjectDetail key={displayedProject.id} project={displayedProject}/>
+                    ) : (
+                        <motion.div
+                            key="empty"
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
+                            exit={{opacity: 0}}
+                            transition={{duration: 0.3}}
+                            style={{
+                                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                                fontSize: "8px",
+                                fontWeight: 300,
+                                letterSpacing: "0.22em",
+                                color: "#1a1a1a",
+                                opacity: 0.2,
+                                paddingLeft: "6vw",
+                            }}
+                        >
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        </section>
+    );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -712,37 +1104,10 @@ export default function Home() {
     }, []);
 
     return (
-        <div
-            style={{
-                width: "100vw",
-                height: "100vh",
-                position: "relative",
-                overflow: "hidden",
-                background: "#ffffff",
-            }}
-        >
-            {/* Sunset lamp */}
-            <div style={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -60%)",
-                width: "55vmin",
-                height: "55vmin",
-                borderRadius: "50%",
-                background: `radial-gradient(circle,
-                    rgba(210,50,20,0.55) 0%,
-                    rgba(240,90,10,0.45) 25%,
-                    rgba(255,150,0,0.35) 50%,
-                    rgba(255,210,0,0.2) 70%,
-                    transparent 85%
-                )`,
-                pointerEvents: "none",
-                zIndex: 0,
-            }}/>
-            <BackgroundScribble key={scribbleKey}/>
+        <div style={{width: "100vw", background: "#ffffff"}}>
             {/* Reload scribble button */}
-            <div style={{position: "fixed", top: 20, right: 20, zIndex: 10001, display: "flex", alignItems: "center", gap: 8}}
+            <div
+                style={{position: "fixed", top: 20, right: 20, zIndex: 10001, display: "flex", alignItems: "center", gap: 8}}
                 onMouseEnter={e => {
                     (e.currentTarget.querySelector("button") as HTMLElement).style.opacity = "0.8";
                     (e.currentTarget.querySelector("span") as HTMLElement).style.opacity = "1";
@@ -763,7 +1128,7 @@ export default function Home() {
                     pointerEvents: "none",
                     whiteSpace: "nowrap",
                 }}>
-                    redraw scribble
+                    scribble
                 </span>
                 <button
                     onClick={() => setScribbleKey(k => k + 1)}
@@ -792,20 +1157,78 @@ export default function Home() {
                     />
                 </button>
             </div>
+
             <ClickBurst/>
             <CursorTrail/>
             <Cursor/>
             <CursorTooltip project={hoveredProject}/>
-            <Identity/>
-            {projects.map((p, i) => (
-                <ProjectNode
-                    key={p.id}
-                    p={p}
-                    index={i}
-                    onHoverIn={() => setHoveredProject(p)}
-                    onHoverOut={() => setHoveredProject(null)}
-                />
-            ))}
+
+            {/* ── Hero section ── */}
+            <div style={{
+                width: "100vw",
+                height: "100vh",
+                position: "relative",
+                overflow: "hidden",
+            }}>
+                {/* Sunset lamp */}
+                <div style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -60%)",
+                    width: "55vmin",
+                    height: "55vmin",
+                    borderRadius: "50%",
+                    background: `radial-gradient(circle,
+                        rgba(210,50,20,0.55) 0%,
+                        rgba(240,90,10,0.45) 25%,
+                        rgba(255,150,0,0.35) 50%,
+                        rgba(255,210,0,0.2) 70%,
+                        transparent 85%
+                    )`,
+                    pointerEvents: "none",
+                    zIndex: 0,
+                }}/>
+
+                <BackgroundScribble key={scribbleKey}/>
+
+                <Identity/>
+                {projects.map((p, i) => (
+                    <ProjectNode
+                        key={p.id}
+                        p={p}
+                        index={i}
+                        onHoverIn={() => setHoveredProject(p)}
+                        onHoverOut={() => setHoveredProject(null)}
+                    />
+                ))}
+
+                {/* Scroll hint */}
+                <motion.div
+                    style={{
+                        position: "absolute",
+                        bottom: 28,
+                        left: "50%",
+                        x: "-50%",
+                        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                        fontSize: "8px",
+                        fontWeight: 300,
+                        letterSpacing: "0.24em",
+                        color: "#1a1a1a",
+                        zIndex: 5,
+                        pointerEvents: "none",
+                        textTransform: "uppercase",
+                    }}
+                    initial={{opacity: 0}}
+                    animate={{opacity: 0.28}}
+                    transition={{delay: 3, duration: 1.5, ease: "easeOut"}}
+                >
+                    scroll
+                </motion.div>
+            </div>
+
+            {/* ── Projects section ── */}
+            <ProjectsSection/>
         </div>
     );
 }
