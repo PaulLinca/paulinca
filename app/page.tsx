@@ -9,6 +9,7 @@ import { Cursor } from "@/components/Cursor";
 import { CursorTooltip } from "@/components/CursorTooltip";
 import { CursorTrail } from "@/components/CursorTrail";
 import { AboutSection } from "@/components/AboutSection";
+import { BottomScribble } from "@/components/BottomScribble";
 import { HeroSection } from "@/components/HeroSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 
@@ -52,6 +53,7 @@ export default function Home() {
             />
 
             <AboutSection />
+            <BottomScribble />
         </div>
     );
 }

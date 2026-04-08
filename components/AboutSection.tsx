@@ -3,20 +3,20 @@
 import { motion } from "framer-motion";
 
 const SOCIALS = [
+    { icon: "/images/linkedin.png",  alt: "LinkedIn",  href: "https://www.linkedin.com/in/lincapaul/" },
     { icon: "/images/github.png",    alt: "GitHub",    href: "https://github.com/PaulLinca" },
     { icon: "/images/instagram.png", alt: "Instagram", href: "https://www.instagram.com/appsbypaul/" },
-    { icon: "/images/linkedin.png",  alt: "LinkedIn",  href: "https://www.linkedin.com/in/lincapaul/" },
 ];
 
 export function AboutSection() {
     return (
         <section style={{
-            minHeight: "60vh",
+            minHeight: "auto",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            padding: "16px 4vw 100px",
+            padding: "16px 4vw 40px",
             background: "#ffffff",
         }}>
             <motion.div
