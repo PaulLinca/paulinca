@@ -188,7 +188,10 @@ interface ProjectLink {
 // Panel block types — add more kinds here as needed
 type PanelBlock =
     | { kind: "text"; value: string; variant?: "heading" | "subheading" | "body" | "caption" | "label" }
-    | { kind: "image"; src: string; alt?: string; width?: number; borderRadius?: number };
+    | { kind: "image"; src: string; alt?: string; width?: number; borderRadius?: number }
+    | { kind: "phone-screenshots"; images: { src: string; alt?: string; rounded?: boolean; circle?: boolean }[]; layout?: "fan" | "ladder" | "phone-fan" | "scatter" }
+    | { kind: "quack-scatter" }
+    | { kind: "plant-newtab" };
 
 interface AppProject {
     id: string;
@@ -227,6 +230,15 @@ const appProjects: AppProject[] = [
         links: [
             {type: "playstore", url: "https://play.google.com/store/apps/details?id=com.linca.vybes"},
         ],
+        leftPanel: [
+            {
+                kind: "phone-screenshots", images: [
+                    {src: "/images/vybes_profile.png", alt: "vybes profile"},
+                    {src: "/images/vybes_albums.png", alt: "vybes albums"},
+                    {src: "/images/vybes_songs.png", alt: "vybes songs"},
+                ]
+            },
+        ],
         rightPanel: [
             {kind: "text", value: "vybes", variant: "heading"},
             {kind: "text", value: "2025", variant: "label"},
@@ -244,6 +256,16 @@ const appProjects: AppProject[] = [
             {type: "appstore", url: "https://apps.apple.com/us/app/court-score-padel-scoreboard/id6759218272"},
         ],
         rightPanel: [
+            {kind: "phone-screenshots", layout: "scatter", images: [
+                {src: "/images/courtscore_android_match.png", alt: "android match", circle: true},
+                    {src: "/images/courtscore_android_settings.png", alt: "android settings", circle: true},
+                    {src: "/images/courtscore_android_scheme.png", alt: "android scheme", circle: true},
+                {src: "/images/courtscore_apple_match.png", alt: "apple match", rounded: true},
+                {src: "/images/courtscore_apple_new.png", alt: "apple new", rounded: true},
+                {src: "/images/courtscore_apple_set.png", alt: "apple set", rounded: true},
+            ]},
+        ],
+        leftPanel: [
             {kind: "text", value: "Court Score", variant: "heading"},
             {kind: "text", value: "2026", variant: "label"},
             {kind: "text", value: "A smartwatch app for tracking padel scores right from your wrist. No phone needed.", variant: "body"},
@@ -258,6 +280,13 @@ const appProjects: AppProject[] = [
         links: [
             {type: "playstore", url: "https://play.google.com/store/apps/details?id=com.linca.tapsleep.android"},
             {type: "appstore", url: "https://apps.apple.com/us/app/tapsleep/id6760365138"},
+        ],
+        leftPanel: [
+            {kind: "phone-screenshots", layout: "phone-fan", images: [
+                {src: "/images/tapsleep_blending.png", alt: "blending"},
+                {src: "/images/tapsleep_main.png", alt: "main"},
+                {src: "/images/tapsleep_player.png", alt: "player"},
+            ]},
         ],
         rightPanel: [
             {kind: "text", value: "TapSleep", variant: "heading"},
@@ -275,6 +304,9 @@ const appProjects: AppProject[] = [
             {type: "chrome", url: "https://chromewebstore.google.com/detail/plant-focus-buddy/jaeepnifniockiaomhgnbldfeoilmigc?authuser=0&hl=en-GB"},
         ],
         rightPanel: [
+            {kind: "plant-newtab"},
+        ],
+        leftPanel: [
             {kind: "text", value: "Plant Focus Buddy", variant: "heading"},
             {kind: "text", value: "2025", variant: "label"},
             {kind: "text", value: "A browser extension that gamifies focus time by letting you grow a digital plant. Stay focused, keep your plant alive.", variant: "body"},
@@ -288,6 +320,9 @@ const appProjects: AppProject[] = [
         icon: "/images/rubberduck_icon.jpg",
         links: [
             {type: "web", url: "https://explainyourbugtotherubberduck.com/"},
+        ],
+        leftPanel: [
+            {kind: "quack-scatter"},
         ],
         rightPanel: [
             {kind: "text", value: "Talk to a duck", variant: "heading"},
@@ -317,7 +352,7 @@ function BackgroundScribble() {
         let y = H * (0.25 + r() * 0.5);
         let angle = r() * Math.PI * 2;
         let speed = 18 + r() * 25;
-        const pts: {x: number; y: number}[] = [{x, y}];
+        const pts: { x: number; y: number }[] = [{x, y}];
         const steps = 120 + Math.floor(r() * 80);
 
         for (let i = 0; i < steps; i++) {
@@ -378,15 +413,19 @@ function BackgroundScribble() {
 // ─── Click burst ───────────────────────────────────────────────────────────────
 
 function ClickBurst() {
-    const [bursts, setBursts] = useState<{id: number; x: number; y: number}[]>([]);
+    const [bursts, setBursts] = useState<{ id: number; x: number; y: number }[]>([]);
     const idRef = useRef(0);
 
     useEffect(() => {
         let downAt = 0;
         let curPos = {x: 0, y: 0};
 
-        const onDown = () => { downAt = Date.now(); };
-        const onMove = (e: MouseEvent) => { curPos = {x: e.clientX, y: e.clientY}; };
+        const onDown = () => {
+            downAt = Date.now();
+        };
+        const onMove = (e: MouseEvent) => {
+            curPos = {x: e.clientX, y: e.clientY};
+        };
         const onUp = () => {
             if (downAt && Date.now() - downAt >= 400) {
                 const id = idRef.current++;
@@ -465,9 +504,14 @@ function CursorTrail() {
         resize();
         window.addEventListener("resize", resize);
 
-        const onMove = (e: MouseEvent) => { mouse.current = {x: e.clientX, y: e.clientY}; };
+        const onMove = (e: MouseEvent) => {
+            mouse.current = {x: e.clientX, y: e.clientY};
+        };
         const onDown = (e: MouseEvent) => {
-            chain.current.forEach(p => { p.x = e.clientX; p.y = e.clientY; });
+            chain.current.forEach(p => {
+                p.x = e.clientX;
+                p.y = e.clientY;
+            });
             mouse.current = {x: e.clientX, y: e.clientY};
             held.current = true;
         };
@@ -936,7 +980,7 @@ function ProjectCard({project, isActive, isLocked, onHover, onLeave, onClick}: {
 
 // ─── Panel renderer ────────────────────────────────────────────────────────────
 
-const PANEL_TEXT_STYLES: Record<NonNullable<Extract<PanelBlock, {kind: "text"}>["variant"]>, React.CSSProperties> = {
+const PANEL_TEXT_STYLES: Record<NonNullable<Extract<PanelBlock, { kind: "text" }>["variant"]>, React.CSSProperties> = {
     heading: {
         fontSize: "clamp(28px, 3.5vw, 48px)",
         fontWeight: 300,
@@ -977,7 +1021,7 @@ const PANEL_TEXT_STYLES: Record<NonNullable<Extract<PanelBlock, {kind: "text"}>[
     },
 };
 
-function PanelRenderer({blocks, align}: {blocks: PanelBlock[]; align: "left" | "right"}) {
+function PanelRenderer({blocks, align}: { blocks: PanelBlock[]; align: "left" | "right" }) {
     return (
         <motion.div
             initial={{opacity: 0, x: align === "left" ? -12 : 12}}
@@ -1020,6 +1064,284 @@ function PanelRenderer({blocks, align}: {blocks: PanelBlock[]; align: "left" | "
                                 display: "block",
                             }}
                         />
+                    );
+                }
+                if (block.kind === "phone-screenshots") {
+                    if (block.layout === "phone-fan") {
+                        // Center phone largest + upright, sides smaller + rotated + faded
+                        const cW = 148, cH = 312; // center
+                        const sW = 132, sH = 278; // sides
+                        const totalW = 370;
+                        const totalH = cH + 20;
+                        const phones = [
+                            { img: block.images[0], w: sW, h: sH, left: 0,               rotate: -7, opacity: 1, z: 1 },
+                            { img: block.images[1], w: cW, h: cH, left: totalW/2 - cW/2, rotate: -1, opacity: 1, z: 3 },
+                            { img: block.images[2], w: sW, h: sH, left: totalW - sW,      rotate:  6, opacity: 1, z: 1 },
+                        ];
+                        return (
+                            <div key={i} style={{
+                                position: "relative",
+                                width: `${totalW}px`,
+                                height: `${totalH}px`,
+                                flexShrink: 0,
+                            }}>
+                                {phones.map((p, j) => (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        key={j}
+                                        src={p.img.src}
+                                        alt={p.img.alt ?? ""}
+                                        style={{
+                                            position: "absolute",
+                                            width: `${p.w}px`,
+                                            height: `${p.h}px`,
+                                            objectFit: "cover",
+                                            objectPosition: "top",
+                                            borderRadius: "20px",
+                                            border: "1.5px solid rgba(0,0,0,0.08)",
+                                            boxShadow: "0 16px 48px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)",
+                                            transform: `rotate(${p.rotate}deg)`,
+                                            transformOrigin: "bottom center",
+                                            left: `${p.left}px`,
+                                            top: `${(totalH - p.h) / 2}px`,
+                                            opacity: p.opacity,
+                                            zIndex: p.z,
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        );
+                    }
+                    if (block.layout === "scatter") {
+                        const imgW = 88;
+                        // Hexagonal layout: 6 vertices of a regular hexagon, r=110px
+                        // centre at (150,175), adjacent centre-to-centre = 110px > imgW = 88px
+                        const slots = [
+                            { left: 106, top:  21, rotate: -4 }, // top
+                            { left: 201, top:  76, rotate:  5 }, // top-right
+                            { left: 201, top: 186, rotate: -6 }, // bottom-right
+                            { left: 106, top: 241, rotate:  3 }, // bottom
+                            { left:  11, top: 186, rotate: -8 }, // bottom-left
+                            { left:  11, top:  76, rotate:  7 }, // top-left
+                        ];
+                        return (
+                            <div key={i} style={{position: "relative", width: "300px", height: "340px", flexShrink: 0}}>
+                                {block.images.map((img, j) => {
+                                    const s = slots[j] ?? slots[0];
+                                    return (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            key={j}
+                                            src={img.src}
+                                            alt={img.alt ?? ""}
+                                            style={{
+                                                position: "absolute",
+                                                width: `${imgW}px`,
+                                                height: img.circle ? `${imgW}px` : "auto",
+                                                objectFit: "cover",
+                                                borderRadius: img.circle ? "50%" : img.rounded ? "12px" : "0px",
+                                                boxShadow: "0 6px 20px rgba(0,0,0,0.20), 0 2px 6px rgba(0,0,0,0.10)",
+                                                transform: `rotate(${s.rotate}deg)`,
+                                                left: `${s.left}px`,
+                                                top: `${s.top}px`,
+                                            }}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        );
+                    }
+                    if (block.layout === "ladder") {
+                        // Two diagonal ladders stacked vertically: first 3 = top group, last 3 = bottom group
+                        // Diagonal goes right→left so images anchor near the center cards with no dead left space
+                        const imgW = 88;
+                        const step = 60;
+                        const groups = [block.images.slice(0, 3), block.images.slice(3)];
+                        const n = groups[0].length;
+                        const stackW = imgW + step * (n - 1);
+                        const stackH = imgW + step * (n - 1);
+                        const groupGap = 36;
+                        const totalH = stackH * 2 + groupGap;
+                        return (
+                            <div key={i} style={{
+                                position: "relative",
+                                width: `${stackW}px`,
+                                height: `${totalH}px`,
+                                flexShrink: 0,
+                            }}>
+                                {groups.map((group, gi) => (
+                                    group.map((img, j) => (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            key={`${gi}-${j}`}
+                                            src={img.src}
+                                            alt={img.alt ?? ""}
+                                            style={{
+                                                position: "absolute",
+                                                width: `${imgW}px`,
+                                                height: img.circle ? `${imgW}px` : "auto",
+                                                objectFit: "cover",
+                                                borderRadius: img.circle ? "50%" : img.rounded ? "12px" : "0px",
+                                                boxShadow: "0 6px 20px rgba(0,0,0,0.20), 0 2px 6px rgba(0,0,0,0.10)",
+                                                left: `${(n - 1 - j) * step}px`,
+                                                top: `${gi * (stackH + groupGap) + j * step}px`,
+                                                zIndex: j,
+                                            }}
+                                        />
+                                    ))
+                                ))}
+                            </div>
+                        );
+                    }
+
+                    const rotations = [-22, -2, 18];
+                    const offsets = [
+                        {x: -62, y: 18},
+                        {x: -20, y: -10},
+                        {x: 24, y: 16},
+                    ];
+                    return (
+                        <div key={i} style={{
+                            position: "relative",
+                            width: "260px",
+                            height: "340px",
+                            flexShrink: 0,
+                        }}>
+                            {block.images.map((img, j) => (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                    key={j}
+                                    src={img.src}
+                                    alt={img.alt ?? ""}
+                                    style={{
+                                        position: "absolute",
+                                        width: "140px",
+                                        height: "auto",
+                                        objectFit: "cover",
+                                        borderRadius: img.rounded !== false ? "22px" : "0px",
+                                        boxShadow: "0 10px 36px rgba(0,0,0,0.20), 0 2px 10px rgba(0,0,0,0.10)",
+                                        transform: `rotate(${rotations[j]}deg) translate(${offsets[j].x}px, ${offsets[j].y}px)`,
+                                        transformOrigin: "bottom center",
+                                        left: "50%",
+                                        top: "50%",
+                                        marginLeft: "-70px",
+                                        marginTop: "-155px",
+                                        zIndex: j,
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    );
+                }
+                if (block.kind === "quack-scatter") {
+                    const quacks = [
+                        { text: "quack.",      x: 58,  y: 2,   size: 26, opacity: 0.85, rotate: -3  },
+                        { text: "quack!",      x: 4,   y: 32,  size: 16, opacity: 0.40, rotate:  2  },
+                        { text: "quack...",    x: 76,  y: 48,  size: 14, opacity: 0.28, rotate: -5  },
+                        { text: "quack quack", x: 12,  y: 66,  size: 32, opacity: 0.70, rotate:  1  },
+                        { text: "quack?",      x: 70,  y: 82,  size: 13, opacity: 0.22, rotate: -8  },
+                        { text: "quack.",      x: -2,  y: 10,  size: 19, opacity: 0.55, rotate:  4  },
+                        { text: "quack!",      x: 42,  y: 24,  size: 38, opacity: 0.15, rotate: -2  },
+                        { text: "quack...",    x: 22,  y: 90,  size: 15, opacity: 0.45, rotate:  6  },
+                        { text: "quack.",      x: 84,  y: 16,  size: 12, opacity: 0.30, rotate: -6  },
+                        { text: "QUACK.",      x: 46,  y: 57,  size: 22, opacity: 0.60, rotate:  3  },
+                        { text: "quack!",      x: 8,   y: 50,  size: 11, opacity: 0.20, rotate: -1  },
+                        { text: "quack...",    x: 68,  y: 36,  size: 17, opacity: 0.50, rotate:  7  },
+                        { text: "quack.",      x: 34,  y: 76,  size: 24, opacity: 0.35, rotate: -4  },
+                        { text: "quack?",      x: 90,  y: 64,  size: 13, opacity: 0.38, rotate:  5  },
+                        { text: "QUACK!",      x: -4,  y: 86,  size: 16, opacity: 0.25, rotate: -7  },
+                    ];
+                    return (
+                        <div key={i} style={{position: "relative", width: "300px", height: "340px", flexShrink: 0}}>
+                            {quacks.map((q, j) => (
+                                <span key={j} style={{
+                                    position: "absolute",
+                                    left: `${q.x}%`,
+                                    top: `${q.y}%`,
+                                    fontSize: `${q.size}px`,
+                                    opacity: q.opacity,
+                                    transform: `rotate(${q.rotate}deg)`,
+                                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                                    fontWeight: 300,
+                                    color: "#1a1a1a",
+                                    letterSpacing: "0.02em",
+                                    whiteSpace: "nowrap",
+                                    userSelect: "none",
+                                }}>
+                                    {q.text}
+                                </span>
+                            ))}
+                        </div>
+                    );
+                }
+                if (block.kind === "plant-newtab") {
+                    const plants = [
+                        {src: "/images/plant_lily.png",     h: 72},
+                        {src: "/images/plant_pothos.png",   h: 88},
+                        {src: "/images/plant_monstera.png", h: 96},
+                        {src: "/images/plant_snake.png",    h: 80},
+                    ];
+                    return (
+                        <div key={i} style={{display: "flex", flexDirection: "column", gap: "16px", flexShrink: 0, width: "400px"}}>
+                            {/* Mini new-tab card */}
+                            <div style={{
+                                width: "100%",
+                                background: "linear-gradient(160deg, #0f1e0f 0%, #0c170c 50%, #141208 100%)",
+                                borderRadius: "14px",
+                                padding: "18px 16px 14px",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: "8px",
+                                boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
+                                border: "1px solid rgba(255,255,255,0.06)",
+                            }}>
+                                {/* Time */}
+                                <div style={{fontSize: "38px", fontWeight: 200, color: "rgba(255,255,255,0.9)", letterSpacing: "0.04em", lineHeight: 1, fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>10:42</div>
+                                <div style={{fontSize: "10px", color: "rgba(255,255,255,0.3)", letterSpacing: "0.08em", fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>Wednesday, March 18</div>
+
+                                {/* Plant */}
+                                <div style={{position: "relative", height: "80px", display: "flex", alignItems: "flex-end", justifyContent: "center"}}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src="/images/plant_pothos.png" alt="plant" style={{height: "76px", objectFit: "contain", filter: "drop-shadow(0 8px 16px rgba(74,222,128,0.3))"}}/>
+                                </div>
+
+                                {/* State pill */}
+                                <div style={{display: "inline-flex", alignItems: "center", gap: "5px", background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.3)", color: "#4ade80", fontSize: "9px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "4px 12px", borderRadius: "100px", fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>
+                                    <div style={{width: "5px", height: "5px", borderRadius: "50%", background: "#4ade80"}}/>
+                                    Thriving
+                                </div>
+
+                                {/* Health bar */}
+                                <div style={{display: "flex", alignItems: "center", gap: "8px", width: "180px"}}>
+                                    <div style={{flex: 1, height: "4px", background: "rgba(255,255,255,0.08)", borderRadius: "2px", overflow: "hidden"}}>
+                                        <div style={{width: "88%", height: "100%", background: "linear-gradient(90deg, #16a34a, #4ade80)", borderRadius: "2px"}}/>
+                                    </div>
+                                    <span style={{fontSize: "11px", fontWeight: 700, color: "#4ade80", fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>88%</span>
+                                </div>
+
+                                {/* Stats */}
+                                <div style={{display: "flex", gap: "6px", width: "100%"}}>
+                                    {[
+                                        {label: "Focus Time", val: "1h 38m", color: "#4ade80"},
+                                        {label: "Distracted", val: "11m",    color: "#fbbf24"}
+                                    ].map(s => (
+                                        <div key={s.label} style={{flex: 1, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "8px", padding: "7px 6px", textAlign: "center"}}>
+                                            <div style={{fontSize: "8px", color: "rgba(255,255,255,0.35)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "3px", fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>{s.label}</div>
+                                            <div style={{fontSize: "11px", fontWeight: 700, color: s.color, fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>{s.val}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Plants row */}
+                            <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-around", paddingBottom: "4px"}}>
+                                {plants.map((p, j) => (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img key={j} src={p.src} alt="" style={{height: `${p.h}px`, width: "auto", objectFit: "contain"}}/>
+                                ))}
+                            </div>
+                        </div>
                     );
                 }
                 return null;
@@ -1101,8 +1423,12 @@ function ProjectsSection({sectionRef, lockedProject, setLockedProject}: {
                             project={p}
                             isActive={displayedProject?.id === p.id}
                             isLocked={lockedProject?.id === p.id}
-                            onHover={() => { if (!lockedProject) setHoveredProject(p); }}
-                            onLeave={() => { if (!lockedProject) setHoveredProject(null); }}
+                            onHover={() => {
+                                if (!lockedProject) setHoveredProject(p);
+                            }}
+                            onLeave={() => {
+                                if (!lockedProject) setHoveredProject(null);
+                            }}
                             onClick={() => handleClick(p)}
                         />
                     ))}

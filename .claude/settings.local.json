@@ -6,7 +6,20 @@
       "WebFetch(domain:stefanstefancik.com)",
       "WebFetch(domain:jackiehu.design)",
       "Bash(curl -s https://stefanstefancik.com/ | head -100 && echo \"---JACKIE---\" && curl -s https://jackiehu.design/ | head -150)",
-      "WebFetch(domain:www.housebeautiful.com)"
+      "WebFetch(domain:www.housebeautiful.com)",
+      "WebFetch(domain:ddaniel.dev)",
+      "Bash(curl -s https://ddaniel.dev/ | head -200)",
+      "Bash(curl -s https://ddaniel.dev/assets/app-qz1IJ6KO.js | head -500)",
+      "Bash(curl -s https://ddaniel.dev/assets/app-CsopbyOs.css | head -300)",
+      "Bash(curl -s https://ddaniel.dev/assets/app-qz1IJ6KO.js | grep -i \"click\\\\|animate\\\\|particle\\\\|effect\\\\|scale\\\\|opacity\" | head -100)",
+      "Bash(curl -s https://ddaniel.dev/assets/app-qz1IJ6KO.js | grep -o \"addEventListener\\\\|mousedown\\\\|mousemove\\\\|requestAnimationFrame\\\\|translate\\\\|transform\" | head -50)",
+      "Bash(curl -s https://ddaniel.dev/assets/app-qz1IJ6KO.js | grep -o \"addEventListener.*mousedown\\\\|addEventListener.*mousemove\\\\|addEventListener.*mouseup\" -A50 | head -200)",
+      "Bash(curl -s https://ddaniel.dev/assets/app-qz1IJ6KO.js | sed -n '100,300p' | head -100)",
+      "Bash(npx tsc:*)",
+      "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/vybes* 2>/dev/null)",
+      "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/courtscore*)",
+      "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/tapsleep*)",
+      "Bash(ls /Users/ptudor01/IdeaProjects/paulinca/public/images/plant_*)"
     ]
   }
 }
