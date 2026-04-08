@@ -1132,9 +1132,11 @@ export default function Home() {
 
     return (
         <div style={{width: "100vw", background: "#ffffff"}}>
+            <BackgroundScribble key={scribbleKey}/>
+
             {/* Reload scribble button */}
             <div
-                style={{position: "fixed", top: 20, right: 20, zIndex: 10001, display: "flex", alignItems: "center", gap: 8}}
+                style={{position: "absolute", top: 20, right: 20, zIndex: 10001, display: "flex", alignItems: "center", gap: 8}}
                 onMouseEnter={e => {
                     (e.currentTarget.querySelector("button") as HTMLElement).style.opacity = "0.8";
                     (e.currentTarget.querySelector("span") as HTMLElement).style.opacity = "1";
@@ -1216,8 +1218,6 @@ export default function Home() {
                     pointerEvents: "none",
                     zIndex: 0,
                 }}/>
-
-                <BackgroundScribble key={scribbleKey}/>
 
                 <Identity/>
                 {projects.map((p, i) => (
