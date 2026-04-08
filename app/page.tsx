@@ -185,14 +185,20 @@ interface ProjectLink {
     url: string;
 }
 
+// Panel block types — add more kinds here as needed
+type PanelBlock =
+    | { kind: "text"; value: string; variant?: "heading" | "subheading" | "body" | "caption" | "label" }
+    | { kind: "image"; src: string; alt?: string; width?: number; borderRadius?: number };
+
 interface AppProject {
     id: string;
     name: string;
     year: string;
     tagline: string;
-    description: string;
     icon: string;
     links: ProjectLink[];
+    leftPanel?: PanelBlock[];
+    rightPanel?: PanelBlock[];
 }
 
 const LINK_ICONS: Record<LinkType, string> = {
@@ -217,10 +223,14 @@ const appProjects: AppProject[] = [
         name: "vybes",
         year: "2025",
         tagline: "share your music",
-        description: "A social music sharing app. See what your friends are listening to, share your current track, and discover music through the people you know.",
         icon: "/images/vybes_icon.png",
         links: [
             {type: "playstore", url: "https://play.google.com/store/apps/details?id=com.linca.vybes"},
+        ],
+        rightPanel: [
+            {kind: "text", value: "vybes", variant: "heading"},
+            {kind: "text", value: "2025", variant: "label"},
+            {kind: "text", value: "A social music sharing app. See what your friends are listening to, share your current track, and discover music through the people you know.", variant: "body"},
         ],
     },
     {
@@ -228,11 +238,15 @@ const appProjects: AppProject[] = [
         name: "Court Score",
         year: "2026",
         tagline: "track your score",
-        description: "A Wear OS app for tracking padel and tennis scores right from your wrist. No phone needed on the court.",
         icon: "/images/courtscore_icon.png",
         links: [
             {type: "playstore", url: "https://play.google.com/store/apps/details?id=com.linca.courtscorewear"},
             {type: "appstore", url: "https://apps.apple.com/us/app/court-score-padel-scoreboard/id6759218272"},
+        ],
+        rightPanel: [
+            {kind: "text", value: "Court Score", variant: "heading"},
+            {kind: "text", value: "2026", variant: "label"},
+            {kind: "text", value: "A Wear OS app for tracking padel and tennis scores right from your wrist. No phone needed on the court.", variant: "body"},
         ],
     },
     {
@@ -240,11 +254,15 @@ const appProjects: AppProject[] = [
         name: "TapSleep",
         year: "2026",
         tagline: "sleep tight",
-        description: "A gentle sleep companion. Calming sounds, a simple tap-to-sleep timer, and nothing else to keep you up.",
         icon: "/images/tapsleep_icon.png",
         links: [
             {type: "playstore", url: "https://play.google.com/store/apps/details?id=com.linca.tapsleep.android"},
             {type: "appstore", url: "https://apps.apple.com/us/app/tapsleep/id6760365138"},
+        ],
+        rightPanel: [
+            {kind: "text", value: "TapSleep", variant: "heading"},
+            {kind: "text", value: "2026", variant: "label"},
+            {kind: "text", value: "A gentle sleep companion. Calming sounds, a simple tap-to-sleep timer, and nothing else to keep you up.", variant: "body"},
         ],
     },
     {
@@ -252,10 +270,14 @@ const appProjects: AppProject[] = [
         name: "Plant Focus Buddy",
         year: "2025",
         tagline: "take care of your plants",
-        description: "A Chrome extension that gamifies focus time by letting you grow a digital plant. Stay focused, keep your plant alive.",
         icon: "/images/plantfocusbuddy_icon.png",
         links: [
             {type: "chrome", url: "https://chromewebstore.google.com/detail/plant-focus-buddy/jaeepnifniockiaomhgnbldfeoilmigc?authuser=0&hl=en-GB"},
+        ],
+        rightPanel: [
+            {kind: "text", value: "Plant Focus Buddy", variant: "heading"},
+            {kind: "text", value: "2025", variant: "label"},
+            {kind: "text", value: "A Chrome extension that gamifies focus time by letting you grow a digital plant. Stay focused, keep your plant alive.", variant: "body"},
         ],
     },
     {
@@ -263,10 +285,14 @@ const appProjects: AppProject[] = [
         name: "explainyourbugtotherubberduck.com",
         year: "2026",
         tagline: "talk to a duck",
-        description: "Rubber duck debugging, productized. Explain your bug out loud and you'll usually figure it out before you're done explaining.",
         icon: "/images/rubberduck_icon.jpg",
         links: [
             {type: "web", url: "https://explainyourbugtotherubberduck.com/"},
+        ],
+        rightPanel: [
+            {kind: "text", value: "Explain Your Bug", variant: "heading"},
+            {kind: "text", value: "2026", variant: "label"},
+            {kind: "text", value: "Rubber duck debugging, productized. Explain your bug out loud and you'll usually figure it out before you're done explaining.", variant: "body"},
         ],
     },
 ];
@@ -841,15 +867,15 @@ function ProjectCard({project, isActive, isLocked, onHover, onLeave, onClick}: {
                     }}>
                         {project.name}
                     </span>
-                    <span style={{
-                        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                        fontSize: "10px",
-                        fontWeight: 400,
-                        color: "#fa742d",
-                        letterSpacing: "0.10em",
-                    }}>
-                        {project.year}
-                    </span>
+                    {/*<span style={{*/}
+                    {/*    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',*/}
+                    {/*    fontSize: "10px",*/}
+                    {/*    fontWeight: 400,*/}
+                    {/*    color: "#fa742d",*/}
+                    {/*    letterSpacing: "0.10em",*/}
+                    {/*}}>*/}
+                    {/*    {project.year}*/}
+                    {/*</span>*/}
                 </div>
 
                 {/* Tagline */}
@@ -898,106 +924,96 @@ function ProjectCard({project, isActive, isLocked, onHover, onLeave, onClick}: {
     );
 }
 
-// ─── Project detail (right panel) ─────────────────────────────────────────────
+// ─── Panel renderer ────────────────────────────────────────────────────────────
 
-function ProjectDetail({project}: {project: AppProject}) {
+const PANEL_TEXT_STYLES: Record<NonNullable<Extract<PanelBlock, {kind: "text"}>["variant"]>, React.CSSProperties> = {
+    heading: {
+        fontSize: "clamp(28px, 3.5vw, 48px)",
+        fontWeight: 300,
+        color: "#1a1a1a",
+        letterSpacing: "-0.01em",
+        lineHeight: 1,
+        marginBottom: "6px",
+    },
+    subheading: {
+        fontSize: "18px",
+        fontWeight: 400,
+        color: "#1a1a1a",
+        letterSpacing: "0.01em",
+        lineHeight: 1.2,
+        marginBottom: "4px",
+    },
+    body: {
+        fontSize: "13px",
+        fontWeight: 300,
+        color: "#444",
+        letterSpacing: "0.02em",
+        lineHeight: 1.75,
+        maxWidth: "320px",
+    },
+    caption: {
+        fontSize: "11px",
+        fontWeight: 300,
+        color: "#888",
+        letterSpacing: "0.06em",
+        lineHeight: 1.5,
+    },
+    label: {
+        fontSize: "9px",
+        fontWeight: 300,
+        color: "#fa742d",
+        letterSpacing: "0.22em",
+        marginBottom: "20px",
+    },
+};
+
+function PanelRenderer({blocks, align}: {blocks: PanelBlock[]; align: "left" | "right"}) {
     return (
         <motion.div
-            key={project.id}
-            initial={{opacity: 0, y: 12}}
-            animate={{opacity: 1, y: 0}}
-            exit={{opacity: 0, y: -12}}
+            initial={{opacity: 0, x: align === "left" ? -12 : 12}}
+            animate={{opacity: 1, x: 0}}
+            exit={{opacity: 0, x: align === "left" ? -12 : 12}}
             transition={{duration: 0.45, ease: [0.16, 1, 0.3, 1]}}
             style={{
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "center",
-                padding: "0 0 0 6vw",
+                alignItems: align === "left" ? "flex-end" : "flex-start",
+                padding: align === "left" ? "0 4vw 0 0" : "0 0 0 4vw",
+                maxWidth: "360px",
             }}
         >
-            {/* Large icon */}
-            <motion.img
-                src={project.icon}
-                alt={project.name}
-                style={{
-                    width: "88px",
-                    height: "88px",
-                    objectFit: "contain",
-                    marginBottom: "36px",
-                }}
-                initial={{scale: 0.8, opacity: 0}}
-                animate={{scale: 1, opacity: 1}}
-                transition={{duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.05}}
-            />
-
-            {/* Name */}
-            <div style={{
-                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                fontSize: "clamp(32px, 4vw, 56px)",
-                fontWeight: 300,
-                color: "#1a1a1a",
-                letterSpacing: "-0.01em",
-                lineHeight: 1,
-                marginBottom: "8px",
-            }}>
-                {project.name}
-            </div>
-
-            {/* Year */}
-            <div style={{
-                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                fontSize: "9px",
-                fontWeight: 300,
-                color: "#fa742d",
-                letterSpacing: "0.22em",
-                marginBottom: "28px",
-            }}>
-                {project.year}
-            </div>
-
-            {/* Description */}
-            <div style={{
-                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                fontSize: "13px",
-                fontWeight: 300,
-                color: "#1a1a1a",
-                letterSpacing: "0.02em",
-                lineHeight: 1.75,
-                maxWidth: "360px",
-                opacity: 0.65,
-                marginBottom: "32px",
-            }}>
-                {project.description}
-            </div>
-
-            {/* Links */}
-            <div style={{display: "flex", gap: "8px", flexWrap: "wrap"}}>
-                {project.links.map(link => (
-                    <a
-                        key={link.type}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={LINK_LABELS[link.type]}
-                        style={{display: "inline-flex", cursor: "none"}}
-                        onMouseEnter={e => {
-                            const img = e.currentTarget.querySelector("img") as HTMLElement;
-                            img.style.filter = "brightness(0) saturate(100%) invert(52%) sepia(90%) saturate(600%) hue-rotate(344deg) brightness(1.05)";
-                        }}
-                        onMouseLeave={e => {
-                            const img = e.currentTarget.querySelector("img") as HTMLElement;
-                            img.style.filter = "none";
-                        }}
-                    >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+            {blocks.map((block, i) => {
+                if (block.kind === "text") {
+                    const style = PANEL_TEXT_STYLES[block.variant ?? "body"];
+                    return (
+                        <div key={i} style={{
+                            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                            textAlign: align === "left" ? "right" : "left",
+                            ...style,
+                        }}>
+                            {block.value}
+                        </div>
+                    );
+                }
+                if (block.kind === "image") {
+                    return (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
-                            src={LINK_ICONS[link.type]}
-                            alt={LINK_LABELS[link.type]}
-                            style={{width: "32px", height: "32px", objectFit: "contain", transition: "filter 0.2s ease"}}
+                            key={i}
+                            src={block.src}
+                            alt={block.alt ?? ""}
+                            style={{
+                                width: block.width ?? 200,
+                                height: "auto",
+                                objectFit: "contain",
+                                borderRadius: block.borderRadius ?? 0,
+                                display: "block",
+                            }}
                         />
-                    </a>
-                ))}
-            </div>
+                    );
+                }
+                return null;
+            })}
         </motion.div>
     );
 }
@@ -1018,29 +1034,54 @@ function ProjectsSection() {
         <section style={{
             minHeight: "100vh",
             display: "flex",
-            padding: "100px 8vw 100px",
-            position: "relative",
+            alignItems: "flex-start",
+            padding: "100px 4vw 100px",
             background: "#ffffff",
         }}>
-            {/* Left column — cards */}
+            {/* Left panel */}
             <div style={{
-                flex: "0 0 40%",
-                maxWidth: "420px",
+                flex: 1,
+                position: "sticky",
+                top: 0,
+                height: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+            }}>
+                <AnimatePresence mode="wait">
+                    {displayedProject?.leftPanel && (
+                        <PanelRenderer
+                            key={displayedProject.id + "-left"}
+                            blocks={displayedProject.leftPanel}
+                            align="left"
+                        />
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* Center — cards */}
+            <div style={{
+                flex: "0 0 auto",
+                width: "360px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
             }}>
                 {/* Section label */}
                 <div style={{
                     fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                    fontSize: "13px",
+                    fontSize: "11px",
                     fontWeight: 500,
-                    letterSpacing: "0.12em",
-                    color: "#555",
-                    marginBottom: "24px",
+                    letterSpacing: "0.18em",
+                    color: "#888",
+                    marginBottom: "28px",
                     textTransform: "uppercase",
+                    alignSelf: "flex-start",
                 }}>
                     Personal Projects
                 </div>
 
-                <div>
+                <div style={{width: "100%"}}>
                     {appProjects.map(p => (
                         <ProjectCard
                             key={p.id}
@@ -1055,37 +1096,23 @@ function ProjectsSection() {
                 </div>
             </div>
 
-            {/* Right column — detail */}
+            {/* Right panel */}
             <div style={{
                 flex: 1,
                 position: "sticky",
                 top: 0,
                 height: "100vh",
-                alignSelf: "flex-start",
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "flex-start",
             }}>
                 <AnimatePresence mode="wait">
-                    {displayedProject ? (
-                        <ProjectDetail key={displayedProject.id} project={displayedProject}/>
-                    ) : (
-                        <motion.div
-                            key="empty"
-                            initial={{opacity: 0}}
-                            animate={{opacity: 1}}
-                            exit={{opacity: 0}}
-                            transition={{duration: 0.3}}
-                            style={{
-                                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                                fontSize: "8px",
-                                fontWeight: 300,
-                                letterSpacing: "0.22em",
-                                color: "#1a1a1a",
-                                opacity: 0.2,
-                                paddingLeft: "6vw",
-                            }}
-                        >
-                        </motion.div>
+                    {displayedProject?.rightPanel && (
+                        <PanelRenderer
+                            key={displayedProject.id + "-right"}
+                            blocks={displayedProject.rightPanel}
+                            align="right"
+                        />
                     )}
                 </AnimatePresence>
             </div>
