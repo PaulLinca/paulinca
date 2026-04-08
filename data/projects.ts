@@ -204,7 +204,7 @@ export const appProjects: AppProject[] = [
         rightPanel: [
             { kind: "text", value: "TapSleep", variant: "heading" },
             { kind: "text", value: "2026", variant: "label" },
-            { kind: "text", value: "A gentle sleep companion. Pick one or blend up to three to help you sleep.", variant: "body" },
+            { kind: "text", value: "A gentle sleep companion. Pick one or blend up to three relaxing sounds to help you sleep.", variant: "body" },
         ],
     },
     {
@@ -240,7 +240,7 @@ export const appProjects: AppProject[] = [
         rightPanel: [
             { kind: "text", value: "Talk to a duck", variant: "heading" },
             { kind: "text", value: "2026", variant: "label" },
-            { kind: "text", value: "Rubber duck debugging. Solve your problems yourself, the duck only listens", variant: "body" },
+            { kind: "text", value: "Rubber duck debugging. Solve your problems yourself, the duck only listens.", variant: "body" },
         ],
     },
 ];

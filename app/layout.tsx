@@ -16,7 +16,7 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Paul Linca",
+  title: "paul linca",
   description: "i make apps sometimes",
 };
 
