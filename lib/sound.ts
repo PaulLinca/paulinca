@@ -17,7 +17,7 @@ export function softClick(freq: number) {
     osc.type = "sine";
     osc.frequency.value = freq;
     g.gain.setValueAtTime(0, ctx.currentTime);
-    g.gain.linearRampToValueAtTime(0.006, ctx.currentTime + 0.02);
+    g.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.02);
     g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.7);
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 0.7);
