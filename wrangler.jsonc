@@ -1,5 +1,5 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
   "name": "paulinca",
   "compatibility_date": "2026-05-28",
