@@ -21,5 +21,9 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  "routes": [
+    { "pattern": "paullinca.com/*", "custom_domain": true },
+    { "pattern": "www.paullinca.com/*", "custom_domain": true }
+  ]
 }
