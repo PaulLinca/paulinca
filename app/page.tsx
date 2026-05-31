@@ -25,9 +25,10 @@ export default function Home() {
 
     function handleScatterProjectClick(scatterProjectId: string) {
         const appProject = appProjects.find(p => p.id === scatterProjectId);
-        projectsSectionRef.current?.scrollIntoView({ behavior: "smooth" });
         if (appProject) {
-            setLockedProject(prev => prev?.id === appProject.id ? null : appProject);
+            setLockedProject(appProject);
+        } else {
+            projectsSectionRef.current?.scrollIntoView({ behavior: "smooth" });
         }
     }
 

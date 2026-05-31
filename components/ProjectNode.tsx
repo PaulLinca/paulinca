@@ -54,9 +54,6 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
 
     return (
         <motion.div
-            drag
-            dragMomentum={false}
-            dragElastic={0}
             style={{
                 position: "absolute",
                 left: `calc(50% + ${dx})`,
@@ -69,7 +66,6 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 + index * 0.15, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            whileDrag={{ zIndex: 20 }}
             onHoverStart={onEnter}
             onHoverEnd={onLeave}
             onTap={handleTap}

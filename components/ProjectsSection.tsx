@@ -24,6 +24,16 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
 
     const displayedProject = lockedProject ?? hoveredProject;
 
+    useEffect(() => {
+        if (!lockedProject) return;
+        if (isMobile) {
+            const el = document.querySelector(`[data-project-id="${lockedProject.id}"]`);
+            el?.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+            sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [lockedProject?.id]);
+
     function handleClick(p: AppProject) {
         setLockedProject(prev => prev?.id === p.id ? null : p);
     }
@@ -45,7 +55,7 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
                     {appProjects.map(p => {
                         const isActive = lockedProject?.id === p.id;
                         return (
-                            <div key={p.id}>
+                            <div key={p.id} data-project-id={p.id}>
                                 <ProjectCard
                                     project={p}
                                     isActive={isActive}
