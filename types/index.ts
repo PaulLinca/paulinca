@@ -9,6 +9,8 @@ export interface Project {
     h: number;
     dx: string;
     dy: string;
+    mobileDx?: string;
+    mobileDy?: string;
     rotate: number;
     freq: number;
 }

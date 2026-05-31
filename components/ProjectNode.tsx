@@ -15,15 +15,19 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
 }) {
     const [active, setActive] = useState(false);
     const throttle = useRef(false);
-    const [imgScale, setImgScale] = useState(1);
+    const [isMobile, setIsMobile] = useState(false);
     const hasAppProject = appProjects.some(ap => ap.id === p.id);
 
     useEffect(() => {
-        const update = () => setImgScale(window.innerWidth < 768 ? 0.55 : 1);
+        const update = () => setIsMobile(window.innerWidth < 768);
         update();
         window.addEventListener("resize", update);
         return () => window.removeEventListener("resize", update);
     }, []);
+
+    const imgScale = isMobile ? 0.55 : 1;
+    const dx = isMobile ? (p.mobileDx ?? p.dx) : p.dx;
+    const dy = isMobile ? (p.mobileDy ?? p.dy) : p.dy;
 
     function onEnter() {
         setActive(true);
@@ -56,8 +60,8 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
             dragElastic={0}
             style={{
                 position: "absolute",
-                left: `calc(50% + ${p.dx})`,
-                top: `calc(50% + ${p.dy})`,
+                left: `calc(50% + ${dx})`,
+                top: `calc(50% + ${dy})`,
                 x: "-50%",
                 y: "-50%",
                 zIndex: active ? 10 : 1,
