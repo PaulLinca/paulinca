@@ -44,12 +44,11 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
         onHoverOut();
     }
 
-    function handleClick(e: React.MouseEvent) {
+    function handleTap() {
         if (hasAppProject && onAppClick) {
-            e.preventDefault();
             onAppClick();
-        } else if (p.href === "#") {
-            e.preventDefault();
+        } else if (p.href !== "#" && p.href.startsWith("http")) {
+            window.open(p.href, "_blank", "noopener,noreferrer");
         }
     }
 
@@ -73,12 +72,12 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
             whileDrag={{ zIndex: 20 }}
             onHoverStart={onEnter}
             onHoverEnd={onLeave}
+            onTap={handleTap}
         >
             <a
                 href={p.href}
-                target={!hasAppProject && p.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                onClick={handleClick}
+                onClick={(e) => e.preventDefault()}
                 style={{ display: "block" }}
             >
                 <motion.div
