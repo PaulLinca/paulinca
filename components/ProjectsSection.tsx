@@ -26,12 +26,18 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
 
     useEffect(() => {
         if (!lockedProject) return;
-        if (isMobile) {
-            const el = document.querySelector(`[data-project-id="${lockedProject.id}"]`);
-            el?.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-            sectionRef.current?.scrollIntoView({ behavior: "smooth" });
-        }
+        const timer = setTimeout(() => {
+            if (isMobile) {
+                const el = document.querySelector(`[data-project-id="${lockedProject.id}"]`);
+                if (el) {
+                    const top = el.getBoundingClientRect().top + window.scrollY - 12;
+                    window.scrollTo({ top, behavior: "smooth" });
+                }
+            } else {
+                sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+            }
+        }, 50);
+        return () => clearTimeout(timer);
     }, [lockedProject?.id]);
 
     function handleClick(p: AppProject) {

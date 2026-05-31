@@ -28,7 +28,9 @@ export default function Home() {
         if (appProject) {
             setLockedProject(appProject);
         } else {
-            projectsSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+            setTimeout(() => {
+                projectsSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+            }, 0);
         }
     }
 

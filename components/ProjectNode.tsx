@@ -68,12 +68,11 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
             transition={{ delay: 0.6 + index * 0.15, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             onHoverStart={onEnter}
             onHoverEnd={onLeave}
-            onTap={handleTap}
         >
             <a
                 href={p.href}
                 rel="noopener noreferrer"
-                onClick={(e) => e.preventDefault()}
+                onClick={(e) => { e.preventDefault(); handleTap(); }}
                 style={{ display: "block" }}
             >
                 <motion.div
