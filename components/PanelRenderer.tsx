@@ -265,18 +265,18 @@ function PlantNewTab() {
 
 // ─── PanelRenderer ─────────────────────────────────────────────────────────────
 
-export function PanelRenderer({ blocks, align }: { blocks: PanelBlock[]; align: "left" | "right" }) {
+export function PanelRenderer({ blocks, align, mobile }: { blocks: PanelBlock[]; align: "left" | "right"; mobile?: boolean }) {
     return (
         <motion.div
-            initial={{ opacity: 0, x: align === "left" ? -12 : 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: align === "left" ? -12 : 12 }}
+            initial={{ opacity: 0, x: mobile ? 0 : (align === "left" ? -12 : 12), y: mobile ? 8 : 0 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: mobile ? 0 : (align === "left" ? -12 : 12), y: mobile ? 8 : 0 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             style={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: align === "left" ? "flex-end" : "flex-start",
-                maxWidth: "420px",
+                alignItems: mobile ? "flex-start" : (align === "left" ? "flex-end" : "flex-start"),
+                maxWidth: mobile ? "none" : "420px",
             }}
         >
             {blocks.map((block, i) => {
@@ -285,7 +285,7 @@ export function PanelRenderer({ blocks, align }: { blocks: PanelBlock[]; align: 
                     return (
                         <div key={i} style={{
                             fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                            textAlign: align === "left" ? "right" : "left",
+                            textAlign: mobile ? "left" : (align === "left" ? "right" : "left"),
                             ...style,
                         }}>
                             {block.value}

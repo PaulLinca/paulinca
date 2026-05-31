@@ -1,11 +1,16 @@
 "use client";
 
 import { motion, useMotionValue } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function Cursor() {
     const mx = useMotionValue(-100);
     const my = useMotionValue(-100);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        setIsMobile(window.matchMedia("(pointer: coarse)").matches);
+    }, []);
 
     useEffect(() => {
         const move = (e: MouseEvent) => {
@@ -15,6 +20,8 @@ export function Cursor() {
         window.addEventListener("mousemove", move);
         return () => window.removeEventListener("mousemove", move);
     }, [mx, my]);
+
+    if (isMobile) return null;
 
     return (
         <motion.div

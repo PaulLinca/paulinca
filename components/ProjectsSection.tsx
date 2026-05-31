@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import type { AppProject } from "@/types";
 import { appProjects } from "@/data/projects";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -13,11 +13,82 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
     setLockedProject: React.Dispatch<React.SetStateAction<AppProject | null>>;
 }) {
     const [hoveredProject, setHoveredProject] = useState<AppProject | null>(null);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
+    }, []);
 
     const displayedProject = lockedProject ?? hoveredProject;
 
     function handleClick(p: AppProject) {
         setLockedProject(prev => prev?.id === p.id ? null : p);
+    }
+
+    if (isMobile) {
+        return (
+            <section ref={sectionRef} style={{
+                padding: "60px 0 32px",
+                background: "#ffffff",
+            }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                    src="/images/personal_projects.png"
+                    alt="Personal Projects"
+                    style={{ display: "block", margin: "0 auto 28px", height: "auto", width: "140px" }}
+                />
+
+                <div style={{ padding: "0 16px" }}>
+                    {appProjects.map(p => {
+                        const isActive = lockedProject?.id === p.id;
+                        return (
+                            <div key={p.id}>
+                                <ProjectCard
+                                    project={p}
+                                    isActive={isActive}
+                                    isLocked={isActive}
+                                    onHover={() => {}}
+                                    onLeave={() => {}}
+                                    onClick={() => handleClick(p)}
+                                />
+                                <AnimatePresence>
+                                    {isActive && (
+                                        <motion.div
+                                            key="inline-panel"
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                                            style={{ overflow: "hidden", marginBottom: "10px" }}
+                                        >
+                                            <div style={{ padding: "16px 4px 8px", display: "flex", flexDirection: "column", gap: "24px" }}>
+                                                {p.leftPanel && (
+                                                    <div style={{ display: "flex", justifyContent: "center", overflow: "hidden" }}>
+                                                        <div style={{ zoom: 0.72 }}>
+                                                            <PanelRenderer blocks={p.leftPanel} align="left" mobile />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {p.rightPanel && (
+                                                    <div style={{ display: "flex", justifyContent: "center", overflow: "hidden" }}>
+                                                        <div style={{ zoom: 0.72 }}>
+                                                            <PanelRenderer blocks={p.rightPanel} align="right" mobile />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        );
+                    })}
+                </div>
+            </section>
+        );
     }
 
     return (

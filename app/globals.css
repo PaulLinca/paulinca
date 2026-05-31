@@ -17,10 +17,17 @@ html {
   background: #f5f4f1;
 }
 
+@media (pointer: coarse) {
+  html, a, button {
+    cursor: auto;
+  }
+}
+
 html,
 body {
   width: 100%;
   min-height: 100%;
+  overflow-x: hidden;
   background-color: transparent;
   color: var(--fg);
   font-family: var(--font-sans), system-ui, sans-serif;

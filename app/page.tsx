@@ -32,7 +32,7 @@ export default function Home() {
     }
 
     return (
-        <div style={{ width: "100vw", background: "#ffffff" }}>
+        <div style={{ width: "100%", background: "#ffffff" }}>
             <ClickBurst />
             <CursorTrail />
             <Cursor />

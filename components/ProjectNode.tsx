@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Project } from "@/types";
 import { appProjects } from "@/data/projects";
 import { softClick } from "@/lib/sound";
@@ -15,7 +15,15 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
 }) {
     const [active, setActive] = useState(false);
     const throttle = useRef(false);
+    const [imgScale, setImgScale] = useState(1);
     const hasAppProject = appProjects.some(ap => ap.id === p.id);
+
+    useEffect(() => {
+        const update = () => setImgScale(window.innerWidth < 768 ? 0.55 : 1);
+        update();
+        window.addEventListener("resize", update);
+        return () => window.removeEventListener("resize", update);
+    }, []);
 
     function onEnter() {
         setActive(true);
@@ -79,8 +87,8 @@ export function ProjectNode({ p, index, onHoverIn, onHoverOut, onAppClick }: {
                         src={p.imageSrc}
                         alt={p.name}
                         style={{
-                            width: `${p.w}px`,
-                            height: `${p.h}px`,
+                            width: `${p.w * imgScale}px`,
+                            height: `${p.h * imgScale}px`,
                             objectFit: "contain",
                             display: "block",
                             filter: active
