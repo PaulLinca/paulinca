@@ -64,17 +64,17 @@ export function ProjectsSection({ sectionRef, lockedProject, setLockedProject }:
                                             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                                             style={{ overflow: "hidden", marginBottom: "10px" }}
                                         >
-                                            <div style={{ padding: "16px 4px 8px", display: "flex", flexDirection: "column", gap: "24px" }}>
+                                            <div style={{ padding: "16px 12px 20px", display: "flex", flexDirection: "column", gap: "28px" }}>
                                                 {p.leftPanel && (
-                                                    <div style={{ display: "flex", justifyContent: "center", overflow: "hidden" }}>
-                                                        <div style={{ zoom: 0.72 }}>
+                                                    <div style={{ display: "flex", justifyContent: "center" }}>
+                                                        <div style={{ zoom: 0.72, display: "inline-flex" }}>
                                                             <PanelRenderer blocks={p.leftPanel} align="left" mobile />
                                                         </div>
                                                     </div>
                                                 )}
                                                 {p.rightPanel && (
-                                                    <div style={{ display: "flex", justifyContent: "center", overflow: "hidden" }}>
-                                                        <div style={{ zoom: 0.72 }}>
+                                                    <div style={{ display: "flex", justifyContent: "center" }}>
+                                                        <div style={{ zoom: 0.72, display: "inline-flex" }}>
                                                             <PanelRenderer blocks={p.rightPanel} align="right" mobile />
                                                         </div>
                                                     </div>

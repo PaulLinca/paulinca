@@ -63,6 +63,7 @@ export function ProjectCard({ project, isActive, isLocked, onHover, onLeave, onC
                         fontWeight: 500,
                         color: "#111",
                         letterSpacing: "0.01em",
+                        wordBreak: "break-all",
                     }}>
                         {project.name}
                     </span>

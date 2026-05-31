@@ -275,7 +275,7 @@ export function PanelRenderer({ blocks, align, mobile }: { blocks: PanelBlock[];
             style={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: mobile ? "flex-start" : (align === "left" ? "flex-end" : "flex-start"),
+                alignItems: mobile ? "center" : (align === "left" ? "flex-end" : "flex-start"),
                 maxWidth: mobile ? "none" : "420px",
             }}
         >
@@ -285,7 +285,7 @@ export function PanelRenderer({ blocks, align, mobile }: { blocks: PanelBlock[];
                     return (
                         <div key={i} style={{
                             fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                            textAlign: mobile ? "left" : (align === "left" ? "right" : "left"),
+                            textAlign: mobile ? "center" : (align === "left" ? "right" : "left"),
                             ...style,
                         }}>
                             {block.value}
